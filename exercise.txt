@@ -1,0 +1,11 @@
+patient	day_1	day_2	day_3	day_4	day_5
+patient 1	14	51	73	72	0
+patient 2	12	0	25	25	76
+patient 3	0	66	62	0	52
+patient 4	51	24	0	10	56
+patient 5	35	18	80	73	58
+patient 6	70	26	52	48	64
+patient 7	0	22	18	56	0
+patient 8	46	73	61	47	67
+patient 9	50	39	27	71	79
+patient 10	22	0	56	0	0

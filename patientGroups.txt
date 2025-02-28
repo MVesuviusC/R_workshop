@@ -1,0 +1,11 @@
+patient	trt_group	glucose
+patient 1	control	233
+patient 2	control	187
+patient 3	treated	80
+patient 4	control	193
+patient 5	treated	81
+patient 6	treated	93
+patient 7	control	213
+patient 8	treated	80
+patient 9	treated	81
+patient 10	control	240

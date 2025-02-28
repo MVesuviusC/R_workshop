@@ -1,0 +1,235 @@
+---
+title: "Intro to R 2023 day 4"
+author: "Matt Cannon"
+date: '2023-10-26'
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load libraries
+```{r}
+library(tidyverse)
+```
+
+# Day 4
+
+## General stuff
+
+### What is a loop?
+A loop is instructions for R to do things either conditionally or repeatedly
+Loops are bounded by curly braces { }
+
+### Why use a loop?
+Avoid copying and pasting code, which is error prone and time consuming
+Easier to edit afterwards if you want to change something
+```{r dont_do_this}
+plot(1)
+plot(2)
+plot(2)
+plot(3)
+plot(4)
+plot(5)
+plot(6)
+```
+
+## Functions for today's activity
+
+### Lists
+List of data
+Each bit can be named
+Can have diverse data types
+```{r}
+bunch_o_stuff <-
+  list(first = 1,
+       some_data = mtcars,
+       small_matrix = matrix(c(1, 2, 1, 2), nrow = 2),
+       dogs = c("fido", "toby"))
+
+bunch_o_stuff$first
+bunch_o_stuff$small_matrix
+names(bunch_o_stuff)
+```
+
+### if () {}
+if ( test condition ) {
+  do this stuff if test condition == TRUE
+}
+```{r}
+bobs_age <- 85
+
+bobs_age > 80
+
+if (bobs_age > 80) {
+  print("Bob is probably losing hair.")
+}
+```
+
+#### When to use an if () loop
+If you need to chose when to perform some action based on some condition
+if (the day starts with "F") {
+    go to the pub
+}
+
+### if/else
+Give alternatives to perform if the condition is FALSE
+
+else if () will give alternative conditions to consider
+
+if (I have my lunchbox) {
+  eat my lunch
+} else if (I have money) {
+  buy lunch
+} else {
+  go hungry
+}
+```{r}
+darrins_age <- 15
+
+darrins_age > 80
+
+if (darrins_age > 80) {
+  print("Darrin is probably losing hair.")
+} else {
+  print("Darrin has a full head of lucious hair.")
+}
+
+## Can test multiple conditions with else if ()
+if (darrins_age > 80) {
+  print("Darrin is probably losing hair.")
+  print("other stuff")
+} else if (darrins_age > 50) {
+  print("Darrin has might be losing some hair.")
+} else {
+  print("Darrin has lots of hair.")
+}
+```
+
+### while () {}
+While the condition is TRUE, do the stuff inside the curly braces
+
+Use this when you don't know how many times you need to do something
+
+while (I have ice cream) {
+  eat ice cream
+}
+```{r}
+bettys_age <- 1
+
+while (bettys_age < 100) {
+  bettys_age <- bettys_age + 1
+  print(paste("Betty ages by a year and is now", bettys_age))
+}
+print("Betty died. :'-(")
+
+rand_num <- rnorm(1, sd = 0.5)
+tries <- 1
+while (rand_num < 0.999) {
+  print(paste(rand_num, "I tried to find a number greater than 0.999", tries, "times!"))
+  rand_num <- rnorm(1, sd = 0.5)
+  tries <- tries + 1
+}
+```
+
+#### Example of an infinite loop
+An infinite loop occurs when the tested condition can never evaluate to FALSE
+
+while (I'm not a billionare) {
+    spend all my money on oreos
+}
+
+```{r}
+bettys_age <- 1
+while (bettys_age > 0) {
+  bettys_age <- bettys_age + 1
+  if (bettys_age > 1000) {
+    print("holy moly")
+  }
+  print(paste("Betty is a vampire and can never die. She is now", bettys_age))
+}
+```
+
+### for () {}
+for (variable_name in list/vector of things) {
+  do this using this iteration of variable_name
+}
+
+for (each of my kids) {
+    feed them dinner tonight
+}
+
+Use a for loop when you're doing something to each item in a group of things
+
+```{r}
+list_of_friends <- c("Bob", "Jack", "Jill")
+#list_of_friends <- list(friend1 = "bob", friend2 = "mary")
+
+for (friend in list_of_friends) {
+  print(paste("I gave", friend, "a present."))
+}
+
+print(current_friend)
+```
+
+### as.character(), etc…
+
+Data come in defined types in R
+
+if you have one thing and you want it to be something else, use as.the_thing_I_want_here()
+```{r}
+as.character(1)
+as.numeric("1")
+as.logical(c(1, 0, 2))
+as.integer(1.2)
+as.Date("1983-02-08")
+```
+
+#### Beware of coercion!
+```{r}
+my_numbers <- factor(c("14", "36", "44", "912"))
+my_numbers
+as.numeric(my_numbers)
+```
+
+### colnames()/rownames()
+Get row or column names for a data.frame
+```{r}
+rownames(mtcars)
+colnames(mtcars)
+```
+
+
+## Activity
+
+### Get the starwars data and look at it
+library(tidyverse) # load the tidyverse library
+starwars <- starwars # to get data
+
+
+### Write a for loop using over the “starwars” column names
+Inside the loop, if the column contains numeric data, make a histogram of it
+Otherwise, use table() to get counts
+
+is.numeric()
+column_name <- "height"
+starwars[[column_name]] # same as starwars$height
+
+## If you're super fast:
+### Write a while loop to count the sum of all numbers whose squared value is less than 1,234,567
+
+1^2 < 1,234,567   # add 1 to sum total
+2^2 < 1,234,567   # add 2 to sum total
+3^2 < 1,234,567   # add 3 to sum total
+.
+.
+.
+X^2 > 1,234,567   # stop here
+
+Help someone who is struggling (loops can be confusing)
+

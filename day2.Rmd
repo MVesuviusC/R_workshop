@@ -1,0 +1,192 @@
+---
+title: "Intro to R 2023 day 2"
+author: "Matt Cannon"
+date: '2023-10-24'
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Day 2
+
+## General stuff
+
+## How to make an Rmd file
+
+## packages
+Packages are collections of functions that do specific things
+```{r}
+#install.packages("tidyverse", Ncpus = 8)
+library(tidyverse)
+
+# Backup plan if you run into lots of errors there...
+# By the way, any text that starts with a "#" is a comment and not executed
+#install.packages(c("dplyr", "ggplot2"))
+#library(dplyr)
+#library(ggplot2)
+```
+
+### Subsetting a data.frame with [ ]
+data_frame[row(s), column(s)]
+  empty means everything
+
+```{r}
+# first row, first column (just one element)
+mtcars[1, 1]
+# First row, all columns
+mtcars[1, ]
+# First column, all rows
+mtcars[, 1]
+mtcars$mpg
+# First ten rows, all columns
+mtcars[c(1:10), ]
+```
+
+## Functions for today's activity
+
+### mean()
+```{r mean}
+one_big_number <- c(1, 2, 4, 5, 10000000000)
+big_mean <- mean(one_big_number)
+big_mean
+
+small_mean <- mean(c(2, 3, 4, 10))
+small_mean
+```
+
+Many of these functions can get angry about missing data (`NA`).
+
+Include na.rm = TRUE as an argument to ignore missing data
+
+#### This doesn't work
+```{r dontruns, eval=FALSE}
+mean(c(1, 3, 4, NA, 34))
+```
+
+#### This works
+```{r runs}
+mean(c(1, 3, 4, NA, 34), na.rm = TRUE)
+```
+
+### median()
+```{r median}
+median(one_big_number)
+
+mtcars <- mtcars
+median(mtcars$mpg)
+```
+
+### min()/max()
+```{r minmax}
+min(mtcars$mpg)
+
+max(one_big_number)
+```
+
+### sum()
+```{r some}
+sum(one_big_number)
+sum(c(1, 1, 1, 1, 1, 1))
+```
+
+### standard deviation
+```{r sd}
+sd(one_big_number)
+mpg_sd <- sd(mtcars$mpg)
+```
+
+### filter()
+Filter is a function inside the dplyr package that works on dataframes or tibbles
+```{r filter}
+mtcars <- mtcars
+
+filter(mtcars, mpg > 30)
+
+# and
+filter(mtcars, mpg > 30 & wt < 2)
+
+# or
+filter(mtcars, mpg > 30 | wt < 2)
+```
+
+### select
+Pick (or exclude) columns from a dataframe or tibble
+
+`|>` is a pipe - it passes data from one function to the next
+%>% is the same thing and you'll see this more, but it requires the magrittr package or tidyverse
+    That way you don't have to nest functions (((((((())))))))
+
+head() returns the fist six elements
+```{r select}
+select(mtcars, mpg, disp)
+head(select(mtcars, -mpg, -disp))
+select(mtcars, -mpg, -disp) |> head()
+select(mtcars, !mpg, !disp) |> head(n = 4)
+```
+
+### hist() - histogram
+rnorm() samples numbers from a normal distribution
+```{r hist}
+hist(rnorm(1000, mean = 200, sd = 20), n = 100)
+```
+
+### aov()
+```{r anova}
+aov(mpg ~ disp + wt, data = mtcars)
+
+anova_summary <- summary(aov(mpg ~ disp + wt, data = mtcars))
+anova_summary
+```
+
+### table()
+Count frequencies or combinations
+```{r countStuff}
+table(c("cat a", "cat a", "cat a", "cat b", "cat b", "cat b"),
+      c(1, 1, 2, 2, 2, 2))
+
+table(mtcars$cyl, mtcars$vs)
+```
+
+## Activity
+
+### Read in and check out the Titanic data
+```{r}
+
+```
+
+### Make variables that contain the Mean/median/min/max of age/fare
+```{r}
+
+```
+
+### Use filter to make two new dataframe variables with just male and female only and then calculate the mean/median values for age and fare
+Basically, calculate the mean/median age and fare for men vs women
+```{r}
+
+```
+
+### Make a histogram of the age all passengers
+```{r}
+
+```
+
+### Make another histogram for only passengers who survived
+
+## If you're super fast
+
+### Use `aov()` to test which factors influenced who survived the titanic disaster
+```{r}
+
+```
+
+### Use table() to compare how many women vs men survived
+```{r}
+
+```
+
