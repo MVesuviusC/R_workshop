@@ -1,7 +1,7 @@
 ---
-title: "Intro to R 2023 day 4"
+title: "Intro to R 2025 day 4"
 author: "Matt Cannon"
-date: '2023-10-26'
+date: '2025-04-03'
 output:
   html_document:
     code_folding: hide
@@ -97,7 +97,7 @@ darrins_age > 80
 if (darrins_age > 80) {
   print("Darrin is probably losing hair.")
 } else {
-  print("Darrin has a full head of lucious hair.")
+  print("Darrin has a full head of luscious hair.")
 }
 
 ## Can test multiple conditions with else if ()
@@ -105,7 +105,7 @@ if (darrins_age > 80) {
   print("Darrin is probably losing hair.")
   print("other stuff")
 } else if (darrins_age > 50) {
-  print("Darrin has might be losing some hair.")
+  print("Darrin might be losing some hair.")
 } else {
   print("Darrin has lots of hair.")
 }

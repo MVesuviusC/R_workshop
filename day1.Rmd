@@ -1,44 +1,117 @@
 ---
-title: "Intro to R 2023 day 1"
+title: "Intro to R 2025 day 1"
 author: "Matt Cannon"
-date: '2023-10-23'
+date: '2025-03-31'
 output: html_document
     code_folding: hide
     toc: true
     toc_depth: 2
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Day 1
 
-RStudio overview
-  Projects
+Welcome to the R workshop! This session is designed for complete beginners. Here, you'll learn the basics of R, a powerful tool for data analysis and statistical programming. No prior programming experience is needed. We'll start with simple concepts like variables, functions, and data visualization.
 
-Rmd format
-    ctrl+alt+i to create R chunk
+## Conceptual intro to using R
 
+Working in R requires a different mindset than working in something like Excel. In Excel, you're used to clicking around and seeing the results of your actions immediately. In R, you're writing code that tells the computer what to do, because you can't do it yourself. You'll need to get used to writing code and running it to see the results. It's a different way of working, but it's very powerful once you get the hang of it.
+
+One benefit is that you can save your code and run it again later. This is great for reproducibility. You can also share your code with others, who can run it on their own computers. This is great for collaboration. And you can automate repetitive tasks, saving you time and effort. This is great for efficiency.
+
+The big shift in thought you need to make is thinking about using R as **giving instructions to the computer instead of doing it manually**. In R, you are giving a list of tasks to perform on your data. In fact, in R, you can't easily manually change data stored in variables.
+
+knitr::include_graphics("R_vs_excel_friendly.jpg")
+
+Another tough concept to new comers is that you have to think through the order of operations that you need to get to the analysis that you want. You will need to string together multiple instructions to get to the final result. This is a bit like a recipe. You need to do things in the right order to get the final product you want.
+
+Keep in mind in R:
+    - The computer holds your data in variables that you can't mess with directly
+    - You tell the computer what to do with your data
+    - R will do exactly what you tell it to do (not necessarily what you want it to do)
+    - **The hardest part of learning R is learning the specific commands to get what you want and how to use them**
+        - https://www.youtube.com/watch?v=cDA3_5982h8
+
+## Pep talk
+
+Learning R is hard, but do-able. It takes effort and time and a willingness to move out of your comfort zone. One big thing that will help you learn it is repetition and the best way to get into the habit of using R is to find places where you can use R. As you learn, I would highly encourage you to find places where you are using other tools that can be replaced with R. The more you do it, the faster you'll get comfortable with it.
+
+## RStudio overview
+Projects
+    Projects let you have saved "workspaces" that you can come back to later. This is great for reproducibility and organization. It also lets you switch between projects easily.
+
+RStudio layout
+
+Turn off workspace saving and loading
+- Tools -> Global Options -> General -> Uncheck "Restore .RData into workspace at startup"
+- Tools -> Global Options -> General -> Change "Save workspace to .RData on exit" to "Never"
+- This seems like it is convenient, but can lead to all sorts of headaches.
+
+Working directory
+When you start RStudio it works in a specific directory. This is where it will look for files if you try to read things in. If you want to read in things, you need to keep in mind that you need to reference where the file is **in relation to where R is working**. If you are in a project, the working directory will be where ever you set it when you set up the project. You can see where R is working from by looking above the console. The files panel on the right does not change the directory you're working in, it just shows you what files and folders are there. You can change your working directory with `setwd("path/to/your/directory")`.
+
+## Rmd format
+You are going to want to save your code to a file so you can re-run it later or check what you did during an analysis. There are lots of ways you can do that but the one I'll recommend here is the Rmd (rmarkdown) format. This lets you intersperse your code with text and images and then render it to a nice looking document. You can also render it to a presentation or a website. This is a great way to keep track of what you're doing and share it with others. You can make very fancy reports with Rmd if you want to impress folks, but we'll keep it simple here.
+
+Other file types you may see:
+- .R files are just text files with code in it. You can't have prose and code together (kindof).
+- .qmd files are a newer format that extends Rmd.
+
+In a Rmd file, all code to be executed is written inside "chunks" which are denoted like this.
+
+```{r}
+# your code goes here
+# a pound sign (hashtag) in front of text means it won't be executed
+lm(mpg ~ wt, data = mtcars)
+```
+You can put text outside of your code to keep notes or explain things. This makes it very handy for this workshop as I can type all of these notes and keep the code nice and tidy!
+
+## Other key ideas
 What's a variable?
-    Capitalization matters
+- Data in R is stored in variables. Think of these as buckets of different shapes and sizes that hold data of different types and in different ways.
+- Variables come in various types, which we will discuss later. The data inside of these variables also comes in different types such as numbers, text, and logical values which, again, we'll go over later.
+- The computer keeps track of your variables for you. They don't persist across sessions (mostly).
+- Capitalization matters in R! myVariable is different from MyVariable.
+- To create a variable you use the assignment operator `<-` or `=`. `<-` is the preferred way.
 
 What's a function?
-    Arguments
+- A function is a set of instructions that perform a specific task and can take inputs called arguments. When you do anything in R, you're going to use a function to do it. You'll also hear these referred to as commands. You can think of them as verbs in a sentence. They do things to your data.
+- You can tell something is a function because it will be a word followed by parenthesis. The word is the name of the function and the stuff inside the parenthesis are the arguments.
+- The arguments often have names and you set them by using `name = value`. You can also just put the values in the right order and R will figure it out but you need to know the right order. You can also set the arguments to their default values by not setting them at all. Look at the function documentation to see what the default values are.
+- When you run a function, it does something and usually returns a new value. If you want to keep that value you'll need to save it to a variable.
+
+`this_is_a_fake_function(argument_1 = 1, argument_2 = 2, show_plot = TRUE)`
+    - `this_is_a_fake_function` is the name of the function
+    - `argument_1`, `argument_2`, and `show_plot` are the arguments
+    - `1`, `2`, and `TRUE` are the values of the arguments
+
+`this_is_also_a_fake_function(1, 2, TRUE)`
+    - This is the same function but the arguments are in the right order
 
 Reading function documentation
+- The panel in the bottom right of RStudio will show you the documentation for a function if you type `?function_name` in the console. This will show you what the function does, what arguments it takes, and what the default values are. You can also search for it in the box above the help panel.
+
+Key parts of the help documentation
+- Description: What the function does
+- Usage: shows how to use the function. You can also see defaults for arguments here.
+- Arguments: What the arguments are and what they do
+- Details: More information about the function
+- Value: What the function returns
+- Examples: Examples of how to use the function
 
 ## Functions for today
 
 ### read.delim()
-Read a file into your environment and save it as a variable
-Make sure you tell the function where to find the file relative to where you are
+Read a file into your environment. Remember that once you read in the data, you can't manually change it.
+This demo shows how read.delim() imports a tab-delimited file into a data frame. Ensure the file path is correct. We save the data in a variable called westernQuant.
+
 ```{r readAfile}
 westernQuant <- read.delim("materials/westernQuant.txt", header = TRUE)
 ```
 
 ### summary()
-Generate summary statistics for a variable
+Generate summary statistics for a variable.
+The summary() function computes descriptive statistics (min, max, median, etc.) for each column in a data frame.
+
 ```{r summary}
 mtcars <- mtcars
 
@@ -47,7 +120,9 @@ summary(mtcars)
 ```
 
 ### plot()
-Visualize data
+Visualize data.
+This uses plot() to create scatter plots. The first call creates a basic scatter plot, while the second converts the 'cyl' variable to a factor for categorical visualization.
+
 ```{r plot}
 plot(mtcars$mpg, mtcars$cyl)
 
@@ -55,12 +130,17 @@ plot(as.factor(mtcars$cyl), mtcars$mpg)
 ```
 
 ### boxplot()
+Create a boxplot.
+This example uses boxplot() to display the distribution of mpg across cylinder groups. The `~` syntax is something you won't see much, but basically means "plot this against that".
+
 ```{r}
 boxplot(mtcars$mpg ~ mtcars$cyl)
 ```
 
 ### png()/pdf()
 Save a plot to an image.
+Here, png() opens a device to save the plot as an image file and dev.off() closes the device after plotting.
+
 ```{r saveAplot}
 png(filename = "bob.png")
 plot(1, 1)
@@ -68,7 +148,9 @@ dev.off()
 ```
 
 ### t.test()
-Test for differences between groups
+Test for differences between groups.
+This section demonstrates t.test() for statistical comparisons: first, comparing two numeric vectors; second, comparing group differences within a dataset.
+
 ```{r ttest}
 t.test(1:10, y = c(7:20))
 t.test(extra ~ group, data = sleep)
@@ -105,3 +187,6 @@ Use barplot()
 ### I'm super fast
 Try out wilcox.test()
 
+Try out `hist()` on mtcars$mpg
+
+Help someone around you who may be struggling

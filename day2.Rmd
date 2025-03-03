@@ -1,7 +1,7 @@
 ---
-title: "Intro to R 2023 day 2"
+title: "Intro to R 2025 day 2"
 author: "Matt Cannon"
-date: '2023-10-24'
+date: '2025-04-01'
 output:
   html_document:
     code_folding: hide
@@ -18,29 +18,52 @@ knitr::opts_chunk$set(echo = TRUE)
 ## General stuff
 
 ## How to make an Rmd file
+- Open RStudio
+- File -> New File -> R Markdown
+- Give it a title and author
+- Click OK
+- You'll get a template with some example text and code
+- Write your text and code in the chunks
+
 
 ## packages
-Packages are collections of functions that do specific things
+- Packages are collections of functions that do specific things. You're generally going to end up using packages specific to whatever you want to do in R.
+- You can install packages with `install.packages("package_name")` and load them with `library(package_name)`.
+- Some packages need to be installed using `BiocManager::install("package_name")`.
+- If the package is from GitHub, you'll use `devtools::install_github("package_name")`.
+
+- The tidyverse package is actually a bundle of other packages and has a ton of very useful functions.
+- I almost consider this package to be a requirement for using R.
 ```{r}
 #install.packages("tidyverse", Ncpus = 8)
 library(tidyverse)
 
-# Backup plan if you run into lots of errors there...
-# By the way, any text that starts with a "#" is a comment and not executed
-#install.packages(c("dplyr", "ggplot2"))
-#library(dplyr)
-#library(ggplot2)
+install.packages("praise")
+library(praise)
+praise()
 ```
 
 ### Subsetting a data.frame with [ ]
+- A dataframe is a variable type.
+- It is a table of data with columns and rows. Most of your data will be in data frames.
+- You can subset a dataframe with square brackets `[ ]`.
+- You'll put two numbers (or two groups of numbers) in between the brackets with a comma between them.
+- The first number is the row(s) you want and the second number is the column(s) you want.
+- You can remember rows / columns by remembering "Rats each Cheese".
+- You can also select names of dataframes using the column's name or a row's name.
+- mtcars is a test dataframe that comes with R.
+
 data_frame[row(s), column(s)]
-  empty means everything
 
 ```{r}
+# typing a variable will print it out
+mtcars
 # first row, first column (just one element)
 mtcars[1, 1]
 # First row, all columns
-mtcars[1, ]
+mtcars["Mazda RX4", ]
+# Everything
+mtcars[,]
 # First column, all rows
 mtcars[, 1]
 mtcars$mpg
@@ -48,9 +71,26 @@ mtcars$mpg
 mtcars[c(1:10), ]
 ```
 
+### Subsetting a vector with [ ]
+- A vector is a list of things. It has to all be the *same data type*.
+- Vectors have only one dimension.
+- You can also subset a vector with square brackets `[ ]`.
+- But you only need one number or group of numbers since the data are 1D.
+
+```{r}
+# A vector
+my_vector <- c(1, 2, 3, 4, 5)
+
+# First element
+my_vector[1]
+# First three elements
+my_vector[1:3]
+```
+
 ## Functions for today's activity
 
 ### mean()
+This function calculates the average of a set of numbers. It takes in a vector of numbers and returns a single number.
 ```{r mean}
 one_big_number <- c(1, 2, 4, 5, 10000000000)
 big_mean <- mean(one_big_number)
@@ -64,17 +104,20 @@ Many of these functions can get angry about missing data (`NA`).
 
 Include na.rm = TRUE as an argument to ignore missing data
 
-#### This doesn't work
-```{r dontruns, eval=FALSE}
+#### This doesn't return what we want
+```{r}
 mean(c(1, 3, 4, NA, 34))
 ```
 
 #### This works
-```{r runs}
+```{r}
 mean(c(1, 3, 4, NA, 34), na.rm = TRUE)
 ```
 
 ### median()
+This function calculates the median of a set of numbers. It takes in a vector of numbers and returns a single number.
+
+Note here, we're using a variable that we created in an earlier chunk. Variables persist across chunks.
 ```{r median}
 median(one_big_number)
 
@@ -83,6 +126,7 @@ median(mtcars$mpg)
 ```
 
 ### min()/max()
+These functions calculate the minimum and maximum of a set of numbers. They take in a vector of numbers and return a single number.
 ```{r minmax}
 min(mtcars$mpg)
 
@@ -90,20 +134,27 @@ max(one_big_number)
 ```
 
 ### sum()
+This function calculates the sum of a set of numbers. It takes in a vector of numbers and returns a single number.
 ```{r some}
 sum(one_big_number)
 sum(c(1, 1, 1, 1, 1, 1))
 ```
 
 ### standard deviation
+This function calculates the standard deviation of a set of numbers. It takes in a vector of numbers and returns a single number.
 ```{r sd}
 sd(one_big_number)
 mpg_sd <- sd(mtcars$mpg)
+mpg_sd
 ```
 
 ### filter()
-Filter is a function inside the dplyr package that works on dataframes or tibbles
+- Filter is a function inside the dplyr package (which is part of tidyverse) that works on dataframes or tibbles (fancy dataframes).
+- It filters rows based on some logical condition.
+- It keeps rows where the condition evaluates to TRUE.
+- You can use `&` for "and" and `|` for "or".
 ```{r filter}
+library(tidyverse)
 mtcars <- mtcars
 
 filter(mtcars, mpg > 30)
