@@ -37,6 +37,9 @@ Learning R is hard, but do-able. It takes effort and time and a willingness to m
 
 You're going to see a lot of errors as you get started. That's totally normal, so don't let it discourage you. Everyone runs into errors and one of the most important skills you'll gain as you start is learning how to interpret (and google) error messages.
 
+## Cheat sheets
+Find these in the "cheatsheets" folder.
+
 ## RStudio overview
 ### Projects
 
