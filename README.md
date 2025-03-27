@@ -4,6 +4,7 @@ This workshop is designed to build your foundation in R programming, data manipu
 
 ## Day 1
 - Introduction to R and RStudio
+- How to think about working in R
 - Basic operations, reading data, summary statistics, and plotting
 - Overview of variables and functions
 
@@ -20,7 +21,6 @@ This workshop is designed to build your foundation in R programming, data manipu
 ## Day 4
 - Control structures: for loops, while loops, and conditionals
 - Writing efficient code by avoiding repetition
-- Strategies for error handling and dynamic programming
 
 ## Day 5
 - Data visualization with ggplot2: scatterplots, barplots, and more
