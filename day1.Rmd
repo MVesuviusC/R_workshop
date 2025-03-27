@@ -20,7 +20,7 @@ One benefit is that you can save your code and run it again later. This is great
 
 The big shift in thought you need to make is thinking about using R as **giving instructions to the computer instead of doing it manually**. In R, you are giving a list of tasks to perform on your data. In fact, in R, you can't easily manually change data stored in variables.
 
-knitr::include_graphics("R_vs_excel_friendly.jpg")
+knitr::include_graphics("materials/R_vs_excel_friendly.jpg")
 
 Another tough concept to new comers is that you have to think through the order of operations that you need to get to the analysis that you want. You will need to string together multiple instructions to get to the final result. This is a bit like a recipe. You need to do things in the right order to get the final product you want.
 
@@ -35,18 +35,21 @@ Keep in mind in R:
 
 Learning R is hard, but do-able. It takes effort and time and a willingness to move out of your comfort zone. One big thing that will help you learn it is repetition and the best way to get into the habit of using R is to find places where you can use R. As you learn, I would highly encourage you to find places where you are using other tools that can be replaced with R. The more you do it, the faster you'll get comfortable with it.
 
-## RStudio overview
-Projects
-    Projects let you have saved "workspaces" that you can come back to later. This is great for reproducibility and organization. It also lets you switch between projects easily.
+You're going to see a lot of errors as you get started. That's totally normal, so don't let it discourage you. Everyone runs into errors and one of the most important skills you'll gain as you start is learning how to interpret (and google) error messages.
 
-RStudio layout
+## RStudio overview
+### Projects
+
+Projects let you have saved "workspaces" that you can come back to later. This is great for reproducibility and organization. It also lets you switch between projects easily.
+
+### RStudio layout
 
 Turn off workspace saving and loading
 - Tools -> Global Options -> General -> Uncheck "Restore .RData into workspace at startup"
 - Tools -> Global Options -> General -> Change "Save workspace to .RData on exit" to "Never"
 - This seems like it is convenient, but can lead to all sorts of headaches.
 
-Working directory
+### Working directory
 When you start RStudio it works in a specific directory. This is where it will look for files if you try to read things in. If you want to read in things, you need to keep in mind that you need to reference where the file is **in relation to where R is working**. If you are in a project, the working directory will be where ever you set it when you set up the project. You can see where R is working from by looking above the console. The files panel on the right does not change the directory you're working in, it just shows you what files and folders are there. You can change your working directory with `setwd("path/to/your/directory")`.
 
 ## Rmd format
@@ -54,7 +57,7 @@ You are going to want to save your code to a file so you can re-run it later or 
 
 Other file types you may see:
 - .R files are just text files with code in it. You can't have prose and code together (kindof).
-- .qmd files are a newer format that extends Rmd.
+- .qmd files are a newer format that extends Rmd, but we won't get into that here.
 
 In a Rmd file, all code to be executed is written inside "chunks" which are denoted like this.
 
@@ -65,26 +68,28 @@ lm(mpg ~ wt, data = mtcars)
 ```
 You can put text outside of your code to keep notes or explain things. This makes it very handy for this workshop as I can type all of these notes and keep the code nice and tidy!
 
-## Other key ideas
-What's a variable?
+## Other key concepts
+### What's a variable?
 - Data in R is stored in variables. Think of these as buckets of different shapes and sizes that hold data of different types and in different ways.
 - Variables come in various types, which we will discuss later. The data inside of these variables also comes in different types such as numbers, text, and logical values which, again, we'll go over later.
 - The computer keeps track of your variables for you. They don't persist across sessions (mostly).
 - Capitalization matters in R! myVariable is different from MyVariable.
-- To create a variable you use the assignment operator `<-` or `=`. `<-` is the preferred way.
+- To create a variable you use the assignment operator `<-` or `=`.
+    - `<-` is the preferred way.
+    - my_favorite_number <- 42
 
-What's a function?
+### What's a function?
 - A function is a set of instructions that perform a specific task and can take inputs called arguments. When you do anything in R, you're going to use a function to do it. You'll also hear these referred to as commands. You can think of them as verbs in a sentence. They do things to your data.
-- You can tell something is a function because it will be a word followed by parenthesis. The word is the name of the function and the stuff inside the parenthesis are the arguments.
+- You can tell something is a function because it will be a word followed by parentheses. The word is the name of the function and the stuff inside the parentheses are the arguments.
 - The arguments often have names and you set them by using `name = value`. You can also just put the values in the right order and R will figure it out but you need to know the right order. You can also set the arguments to their default values by not setting them at all. Look at the function documentation to see what the default values are.
 - When you run a function, it does something and usually returns a new value. If you want to keep that value you'll need to save it to a variable.
 
-`this_is_a_fake_function(argument_1 = 1, argument_2 = 2, show_plot = TRUE)`
-    - `this_is_a_fake_function` is the name of the function
-    - `argument_1`, `argument_2`, and `show_plot` are the arguments
-    - `1`, `2`, and `TRUE` are the values of the arguments
+`make_a_sandwich(bread_type = "rye", cheese_type = "swiss", add_mayo = TRUE)`
+    - `make_a_sandwich` is the name of the function
+    - `bread_type`, `cheese_type`, and `add_mayo` are the arguments
+    - `"rye"`, `"swiss"`, and `TRUE` are the values of the arguments
 
-`this_is_also_a_fake_function(1, 2, TRUE)`
+`make_a_sandwich("rye", "swiss", TRUE)`
     - This is the same function but the arguments are in the right order
 
 Reading function documentation
@@ -112,8 +117,13 @@ westernQuant <- read.delim("materials/westernQuant.txt", header = TRUE)
 Generate summary statistics for a variable.
 The summary() function computes descriptive statistics (min, max, median, etc.) for each column in a data frame.
 
+The `mtcars` dataset is a pre-loaded play dataset in R, so we can use it as below.
+
+Note what happens when you run summary() and don't assign the output to a variable. It will print the output to the console. If you assign it to a variable, it will save the output to that variable.
 ```{r summary}
 mtcars <- mtcars
+
+mtcars
 
 mtcars = mtcars
 summary(mtcars)
@@ -121,8 +131,12 @@ summary(mtcars)
 
 ### plot()
 Visualize data.
-This uses plot() to create scatter plots. The first call creates a basic scatter plot, while the second converts the 'cyl' variable to a factor for categorical visualization.
+This uses plot() to create scatter plots.
 
+For this function, we give it x and y values to make a scatter plot.
+`mtcars$mpg` specifies one column of `mtcars`.
+
+The second plot converts the 'cyl' variable to a factor for categorical visualization as a boxplot.
 ```{r plot}
 plot(mtcars$mpg, mtcars$cyl)
 
@@ -139,7 +153,7 @@ boxplot(mtcars$mpg ~ mtcars$cyl)
 
 ### png()/pdf()
 Save a plot to an image.
-Here, png() opens a device to save the plot as an image file and dev.off() closes the device after plotting.
+Here, png() saves the plot as an image file and dev.off() closes the file after plotting.
 
 ```{r saveAplot}
 png(filename = "bob.png")
@@ -153,12 +167,27 @@ This section demonstrates t.test() for statistical comparisons: first, comparing
 
 ```{r ttest}
 t.test(1:10, y = c(7:20))
+
+# sleep is a pre-loaded dataset in R
+sleep
+
 t.test(extra ~ group, data = sleep)
 ```
 
 ## Activity
 
-See the powerpoint for instructions
+- Read in “westernQuant.txt” using either read.delim() or the GUI
+    - The file can be found in the materials folder. Make sure you tell R where to find it.
+    - This is fake data of quantified western blot band intensities
+- Use summary() to look at the data
+- Use t.test() to test if intensity varies between groups
+- Make two plot()s of the two groups
+    - Make x-axis group_name for a first plot
+    - Make x-axis group_number for a second plot
+- Extra task if you're super fast and got done quick
+    - Look up wilcox.test() and use it to compare between groups
+
+If you have trouble, look at how I used these functions above as reference, or check out the documentation.
 
 ### Read in data
 Use read.delim()
@@ -185,8 +214,9 @@ Use barplot()
 ```
 
 ### I'm super fast
+Help someone around you who may be struggling
+
 Try out wilcox.test()
 
 Try out `hist()` on mtcars$mpg
 
-Help someone around you who may be struggling

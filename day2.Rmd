@@ -26,16 +26,16 @@ knitr::opts_chunk$set(echo = TRUE)
 - Write your text and code in the chunks
 
 
-## packages
+## Packages
 - Packages are collections of functions that do specific things. You're generally going to end up using packages specific to whatever you want to do in R.
 - You can install packages with `install.packages("package_name")` and load them with `library(package_name)`.
+    - The functions inside a package are only available to use when loaded with `library()`, even if you've installed it!
 - Some packages need to be installed using `BiocManager::install("package_name")`.
 - If the package is from GitHub, you'll use `devtools::install_github("package_name")`.
-
 - The tidyverse package is actually a bundle of other packages and has a ton of very useful functions.
 - I almost consider this package to be a requirement for using R.
 ```{r}
-#install.packages("tidyverse", Ncpus = 8)
+#install.packages("tidyverse", Ncpus = 4)
 library(tidyverse)
 
 install.packages("praise")
@@ -43,39 +43,49 @@ library(praise)
 praise()
 ```
 
-### Subsetting a data.frame with [ ]
-- A dataframe is a variable type.
+### Data.frames
+- A data.frame is a variable type.
 - It is a table of data with columns and rows. Most of your data will be in data frames.
-- You can subset a dataframe with square brackets `[ ]`.
-- You'll put two numbers (or two groups of numbers) in between the brackets with a comma between them.
-- The first number is the row(s) you want and the second number is the column(s) you want.
-- You can remember rows / columns by remembering "Rats each Cheese".
-- You can also select names of dataframes using the column's name or a row's name.
-- mtcars is a test dataframe that comes with R.
+    - When we loaded in the western data yesterday it was a data.frame.
+- You can subset a data.frame with square brackets `[ ]`.
+    - You'll put two numbers (or two groups of numbers) in between the brackets with a comma between them.
+    - The first number is the row(s) you want and the second number is the column(s) you want.
+    - You can remember rows / columns by remembering "Rats eat Cheese".
+- You can also select names of data.frames using the column's name or a row's name.
+- mtcars is a test data.frame that comes with R.
 
 data_frame[row(s), column(s)]
 
 ```{r}
 # typing a variable will print it out
 mtcars
+
 # first row, first column (just one element)
 mtcars[1, 1]
-# First row, all columns
+
+# First row, all columns Note that this uses the row's name
 mtcars["Mazda RX4", ]
+
 # Everything
-mtcars[,]
+mtcars[, ]
+
 # First column, all rows
 mtcars[, 1]
 mtcars$mpg
+mtcars[, "mpg"]
+
 # First ten rows, all columns
-mtcars[c(1:10), ]
+mtcars[1:10, ]
 ```
 
-### Subsetting a vector with [ ]
+### Vectors
 - A vector is a list of things. It has to all be the *same data type*.
+    - All numbers, words, etc.
+- You can create a vector with the `c()` function.
+    - `c()` stands for "combine".
 - Vectors have only one dimension.
-- You can also subset a vector with square brackets `[ ]`.
-- But you only need one number or group of numbers since the data are 1D.
+- You can subset a vector with square brackets `[ ]`.
+    - But you only need one number or group of numbers since the data are 1D.
 
 ```{r}
 # A vector
@@ -100,9 +110,9 @@ small_mean <- mean(c(2, 3, 4, 10))
 small_mean
 ```
 
-Many of these functions can get angry about missing data (`NA`).
+Many of these functions don't work if there is missing data (`NA`).
 
-Include na.rm = TRUE as an argument to ignore missing data
+Include na.rm = TRUE as an argument to ignore missing data,
 
 #### This doesn't return what we want
 ```{r}
@@ -149,14 +159,28 @@ mpg_sd
 ```
 
 ### filter()
-- Filter is a function inside the dplyr package (which is part of tidyverse) that works on dataframes or tibbles (fancy dataframes).
-- It filters rows based on some logical condition.
+- Filter is a function inside the dplyr package (which is part of tidyverse) that works on data.frames or tibbles (fancy dataframes).
+- It filters rows based on some logical (TRUE/FALSE) condition.
 - It keeps rows where the condition evaluates to TRUE.
 - You can use `&` for "and" and `|` for "or".
+    - The `|` character is just above the enter key and unless you code you've likely never used it.
+- If you need something to match exactly, you need to use two equal signs `==`.
+    - One equal sign is used for assignment.
+- You can use `!=` for "not equal".
+- You can use `>=` for "greater than or equal to" and `<=` for "less than or equal to".
+- You can use `>` for "greater than" and `<` for "less than".
+- Note that when you use many of the tidyverse functions you can specify column names inside the function without needing to use the `$` operator.
+    - This is because the functions are designed to work with data.frames and tibbles.
 ```{r filter}
 library(tidyverse)
 mtcars <- mtcars
 
+"bob" == "bob"
+"bob" != "bob"
+
+mtcars$mpg > 30
+
+# We don't need to use the $ operator here like this: mtcars$mpg
 filter(mtcars, mpg > 30)
 
 # and
@@ -164,30 +188,52 @@ filter(mtcars, mpg > 30 & wt < 2)
 
 # or
 filter(mtcars, mpg > 30 | wt < 2)
+
+filter(mtcars, carb == 2)
 ```
 
 ### select
 Pick (or exclude) columns from a dataframe or tibble
 
-`|>` is a pipe - it passes data from one function to the next
-%>% is the same thing and you'll see this more, but it requires the magrittr package or tidyverse
-    That way you don't have to nest functions (((((((())))))))
+### Pipes
+- `|>` is a pipe - it passes data from one function to the next
+- `%>%` is the same thing and you'll see this more, but it requires the magrittr package or tidyverse
+    - That way you don't have to nest functions (((((((())))))))
+- When using pipes, the data passed from a previous function is assumed to go to the first argument of the next function
+    - You can specify a different argument by using a period `.`
 
-head() returns the fist six elements
+`head()` returns the fist six elements of your data
 ```{r select}
 select(mtcars, mpg, disp)
+
 head(select(mtcars, -mpg, -disp))
-select(mtcars, -mpg, -disp) |> head()
-select(mtcars, !mpg, !disp) |> head(n = 4)
+
+select(mtcars, -mpg, -disp) |>
+    head()
+
+select(mtcars, !mpg, !disp) |>
+    head(n = 4)
+
+select(mtcars, !mpg, !disp) %>%
+    head(n = 4)
+
+# Nested functions, the inner-most function is executed first
+head(select(mtcars, mpg, disp))
 ```
 
 ### hist() - histogram
-rnorm() samples numbers from a normal distribution
+`rnorm()` samples numbers from a normal distribution
 ```{r hist}
-hist(rnorm(1000, mean = 200, sd = 20), n = 100)
+hist(rnorm(n = 1000, mean = 200, sd = 20), n = 100)
+
+rnorm(n = 1000, mean = 200, sd = 20) |>
+    hist(x = ., n = 100)
 ```
 
 ### aov()
+This does an analysis of variance test. It takes in a formula and a data.frame and returns an object that you can use to get more information.
+
+The output of this function doesn't contain everything we usually want, so we can pass the output to `summary()` to get more information.
 ```{r anova}
 aov(mpg ~ disp + wt, data = mtcars)
 
@@ -198,13 +244,44 @@ anova_summary
 ### table()
 Count frequencies or combinations
 ```{r countStuff}
-table(c("cat a", "cat a", "cat a", "cat b", "cat b", "cat b"),
-      c(1, 1, 2, 2, 2, 2))
+table(
+    c(
+        "category a",
+        "category a",
+        "category a",
+        "category b",
+        "category b",
+        "category b"
+    ),
+    c(
+        "red",
+        "blue",
+        "red",
+        "blue",
+        "blue",
+        "blue"
+    )
+)
+
+select(mtcars, cyl, vs)
 
 table(mtcars$cyl, mtcars$vs)
 ```
 
 ## Activity
+- Use titanic.csv
+    - This file is located in the `materials` folder.
+    - This is real data on titanic passengers
+    - Survived: 1 = yes, 0 = no
+- Explore the data
+- Make variables that contain average, median, max and min values for age and fare
+    - Do the same, but split the data by male/female
+- Plot a histogram of age for all the data
+    - Plot only the survivors as a second plot
+- If you're super fast:
+    - Help someone around you who may be struggling
+    - Use table() to compare how many men/women survived
+    - Use aov() to see which factors influenced survival most
 
 ### Read in and check out the Titanic data
 ```{r}

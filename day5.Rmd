@@ -23,43 +23,80 @@ library(tidyverse)
 ## General stuff
 
 ### geoms as layers
-https://ggplot2.tidyverse.org/reference/
+- When you're making a plot using ggplot2, think about it as if you're making a canvas and then adding layers to change it
+- The layers are added in the order you add the code
+- Layers can do things like add points, lines, or more abstract things like change the font of parts of the plot
+- Each layer is separated by a "+" sign, which is pretty much the only time you'll see this in R
+- The documentation for ggplot2 is quite good
+    - https://ggplot2.tidyverse.org/reference/
+    - One trick: skim the documentation for a plot that looks similar to what you want, then look at the code they used to make it
+    - Another: You can also do a google image search for ggplot and the type of plot you want to make then go to the page where the image is from. Often times you'll find the code they used to make it.
 
-## Functions for today's activity, also for reference
+### Anatomy of a ggplot
 
-### ggplot
-ggplot(data_frame_here, aes(x = x_here, y = y_here, other_stuff)) +
-layer_1 +
-layer_2 +
-layer_3 +
-. +
-. +
-. +
-modify_the_plot_somehow
+ggplot(                         # This makes your "canvas"
+    data_frame_here,            # The data you're using - must be a long form data.frame or tibble
+    aes(                        # "Aesthetics" - x, y, colors, shapes, etc  - This will be applied to all layers unless overwritten
+        x = x here,             # The name of the column that has your x values - note that you don't put this in quotes
+        y = y here,             # The name of the column that has your y values
+        other stuff             # You can specify a lot of things here - check the documentation
+    )
+) +
+    layer_1 +                       # Layers can be things like geom_point(), geom_line(), geom_boxplot(), etc
+    layer_2 +                       # You can add multiple different types of geoms, or even multiple of the same type
+    layer_3 +
+    other_stuff +                   # You can add other things like themes, labels, etc
+    more_stuff +
+    change_how_something_looks +
+    modify_the_plot_somehow         # You can really customize the plot and the code can get quite long. Thinking about it as layers can help keep track of what you're doing
+
+
 
 I'm not going over all the things in this document, just the ones marked with lots of pound signs ##############################################################
+
+I put the rest in here for reference. If you go through it I've tried to drop in a bunch of random bits of code that might be useful to you in the future.
+
+## Functions for today's activity, also for reference
 
 #### geom_point() ##############################################################
 Add a scatterplot layer to the plot
 ```{r}
-ggplot(mtcars,
-       aes(x = hp,
-           y = carb)) +
-  geom_point()
+ggplot(
+    mtcars,
+    aes(
+        x = hp,
+        y = carb
+    )
+) +
+    geom_point()
 
 # Set the overall look of the plot - I like the white background better than gray
-theme_set(theme_bw())
-theme_update(plot.title = element_text(hjust = 0.5))
+# This will apply to all plots you make after you run this code, so you only need to run it once per session
+theme_set(theme_bw())                                     # Changes default colors
+theme_update(plot.title = element_text(hjust = 0.5))      # Force title to be in the center
 
-ggplot(mtcars,
-       aes(x = hp,
-           y = carb)) +
-  geom_point() +
-  theme_bw()
+ggplot(
+    mtcars,
+    aes(
+        x = hp,
+        y = carb
+    )
+) +
+    geom_point() +
+    theme_bw()
 ```
 
-#### aes(fill/color/shape/size) ################################################
+#### aes() ################################################
 Change colors/shapes/etc
+
+- fill     = color of the **inside** of a shape
+- color    = color of the **border** of a shape, note that points use color for the color of the point
+- shape    = the shape of the point
+- size     = the size of the point or line
+- alpha    = transparency of the point or line
+- linetype = the type of line
+- group    = the group that the data is in, used for things like boxplots
+- label    = Text to plot somewhere, used in geom_text(), geom_label(), etc
 
 If you put the argument outside of aes()
 
@@ -74,139 +111,200 @@ If you put it inside aes()
 If it is in the aes() call inside of ggplot() `ggplot(aes(...))`
 
 -   It applies to all layers
--   Unless that layer overwrites it
+-   Unless another layer overwrites it
 
 ```{r}
 mtcars %>%
-  ggplot(aes(x = as.factor(cyl),
-             y = hp)) +
-  geom_boxplot(color = "red",
-               fill = "blue",
-               size = 4)
+    ggplot(
+        aes(
+            x = as.factor(cyl),
+            y = hp
+        )
+) +
+    geom_boxplot(
+        color = "red",        # These specifications aren't in aes()
+        fill = "blue",        # They apply to everything and we give specific values
+        size = 4
+    )
 
-ggplot(mtcars,
-       aes(x = hp,
-           y = carb,
-           color = as.factor(vs),
-           shape = as.factor(gear),
-           size = disp)) +
-  geom_point()
+ggplot(
+    mtcars,
+    aes(
+        x = hp,                     # These specifications are in aes()
+        y = carb,                   # They apply to parts of the plot
+        color = as.factor(vs),      # They show up in the legend
+        shape = as.factor(gear),    # We give column names that have the groups we'll use
+        size = disp
+    )
+) +
+    geom_point()
 ```
 
 #### geom_histogram()
-Better looking than hist()
-Specify how many bars to show with `bins`
+- Better looking than hist()
+- Specify how many bars to show with `bins`
 ```{r}
 hist(storms$pressure, n = 200)
 
-ggplot(storms,
-       aes(x = pressure)) +
-  geom_histogram(bins = 200)
+ggplot(
+    storms,
+    aes(x = pressure)
+) +
+    geom_histogram(bins = 200)
 ```
 
 #### geom_density()
-Smooth your data out
-This can actually hide some of the nuance in your data
+- Smooth your data out in a smoothed histogram-looking plot
+    - The adjust argument can make it more or less smooth - 0 is the raw data, 1 is very smooth
+- This can actually hide some of the nuance in your data
 ```{r}
-ggplot(storms,
-       aes(x = pressure,
-           fill = category)) +
-  # alpha sets transparency -- 0 is clear, 1 is opaque
-  geom_density(alpha = 0.1, adjust = 0.5) +
-  # The brewer color palettes are pretty, and "Set2" is color-blind friendly
-  scale_color_brewer(palette = "Set2")
+ggplot(
+    storms,
+    aes(
+        x = pressure,
+        fill = as.factor(category)
+    )
+) +
+    geom_density(alpha = 0.1, adjust = 0.5) + # alpha sets transparency -- 0 is clear, 1 is opaque
+    scale_color_brewer(palette = "Set2") # The brewer color palettes are pretty, and "Set2" is color-blind friendly
 ```
 
 #### geom_col() ################################################################
 Add a barplot layer to the plot
 ```{r}
 mtcars %>%
-  rownames_to_column("car_make") %>%
-  mutate(car_make = str_remove(car_make," .+")) %>%
-  ggplot(aes(x = car_make, y = hp)) +
-  geom_col(color = "red") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  ggtitle("this is a title") +
-  theme_update(plot.title = element_text(hjust = 0.5))
+    rownames_to_column("car_make") %>%                  # This makes the row names a column so we can use it in the plot
+    mutate(car_make = str_remove(car_make, " .+")) %>%  # This removes everything after the first space in the car_make column
+    ggplot(
+        aes(
+            x = car_make,
+            y = hp
+        )
+    ) +
+    geom_col(color = "red") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    ggtitle("this is a title") +
+    theme_update(plot.title = element_text(hjust = 0.5))
 
 mtcars %>%
-  rownames_to_column("car_make") %>%
-  ggplot(aes(y = car_make, x = hp)) +
-  geom_col()
+    rownames_to_column("car_make") %>%
+    ggplot(aes(y = car_make, x = hp)) +
+    geom_col()
 ```
 
-#### geom_errorbar() ###########################################################
+#### geom_errorbar()###########################################################
 Add error bars as a layer to plot
 ```{r}
 summarized_hp <-
-  mtcars %>%
-  group_by(cyl) %>%
-  summarize(mean_hp = mean(hp),
-            sd_hp = sd(hp))
+    mtcars %>%
+    group_by(cyl) %>%
+    summarize(
+        mean_hp = mean(hp),
+        sd_hp = sd(hp)
+    )
 
 summarized_hp
 
-ggplot(summarized_hp,
-       aes(x = as.factor(cyl), y = mean_hp)) +
-  geom_col() +
-  geom_errorbar(aes(ymin = mean_hp - sd_hp,
-                    ymax = mean_hp + sd_hp,
-                    xmin = 2,
-                    xmax = 2))
+ggplot(
+    summarized_hp,
+    aes(
+        x = as.factor(cyl),
+        y = mean_hp
+    )
+) +
+    geom_col() +
+    geom_errorbar(
+        aes(
+            ymin = mean_hp - sd_hp,
+            ymax = mean_hp + sd_hp,
+            xmin = 2,
+            xmax = 2
+        ),
+        width = 0.5,
+        color = "red"
+    )
 
 # This has error bars in the back since that layer was added first!
-ggplot(summarized_hp,
-       aes(x = as.factor(cyl), y = mean_hp)) +
-  geom_errorbar(aes(ymin = mean_hp - sd_hp,
-                    ymax = mean_hp + sd_hp),
-                color = "red") +
-  geom_bar(stat = "identity") +
-  geom_point(color = "blue")
+ggplot(
+    summarized_hp,
+    aes(
+        x = as.factor(cyl),
+        y = mean_hp
+    )
+) +
+    geom_errorbar(
+        aes(
+            ymin = mean_hp - sd_hp,
+            ymax = mean_hp + sd_hp
+        ),
+        color = "red"
+    ) +
+    geom_bar(stat = "identity") +
+    geom_point(color = "blue")
 ```
 
 #### geom_jitter()
 Drop-in replacement for geom_point()
 Adds noise in x and y directions by default so you can see individual points
 ```{r}
-ggplot(summarized_hp,
-       aes(x = as.factor(cyl), y = mean_hp)) +
-  geom_col() +
-  geom_errorbar(aes(ymin = mean_hp - sd_hp,
-                    ymax = mean_hp + sd_hp)) +
-  geom_jitter(data = mtcars,
-              aes(x = as.factor(cyl),
-                  y = hp),
-              color = "red", height = 0)
+ggplot(
+    summarized_hp,
+    aes(
+        x = as.factor(cyl),
+        y = mean_hp
+    )
+) +
+    geom_col() +
+    geom_errorbar(
+        aes(
+            ymin = mean_hp - sd_hp,
+            ymax = mean_hp + sd_hp
+        )
+    ) +
+    geom_jitter(
+        data = mtcars,                     # Note that we can provide an individual geom it's own data
+        aes(
+            x = as.factor(cyl),
+            y = hp
+        ),
+        color = "red", height = 0
+    )
 ```
 
 #### ggbeeswarm package
 Adds noise in x direction and pulls things to the center to make it look nicer than jitter
 ```{r}
-ggplot(summarized_hp,
-       aes(x = as.factor(cyl), y = mean_hp)) +
-  geom_col() +
-  geom_errorbar(aes(ymin = mean_hp - sd_hp,
-                    ymax = mean_hp + sd_hp)) +
-  ggbeeswarm::geom_beeswarm(data = mtcars,
-                            aes(x = as.factor(cyl),
-                                y = hp),
-                            color = "red")
-
-matt_swarm <- function(...) {
-  ggbeeswarm::geom_beeswarm(...)
-}
+ggplot(
+    summarized_hp,
+    aes(
+        x = as.factor(cyl),
+        y = mean_hp
+    )
+) +
+    geom_col() +
+    geom_errorbar(
+        aes(
+            ymin = mean_hp - sd_hp,
+            ymax = mean_hp + sd_hp
+        )
+    ) +
+    ggbeeswarm::geom_beeswarm(
+        data = mtcars,
+        aes(
+            x = as.factor(cyl),
+            y = hp
+        ),
+        color = "red"
+    )
 ```
 
 #### geom_boxplot() ############################################################
 Boxplots!
 ```{r}
 mtcars %>%
-  ggplot(aes(x = as.factor(cyl), y = hp)) +
-  #geom_boxplot() +
-  geom_violin(adjust = 1) +
-  ggbeeswarm::geom_beeswarm()
-
-
+    ggplot(aes(x = as.factor(cyl), y = hp)) +
+    geom_boxplot() +
+    geom_violin(adjust = 1, fill = "red", alpha = 0.5)
 ```
 
 #### geom_smooth
@@ -214,63 +312,89 @@ Add a regression line to your plot
 Can specify the type of regression with `method`
 Can remove gray confidence interval with `se = FALSE`
 ```{r}
-ggplot(mtcars,
-       aes(x = mpg,
-           y = disp)) +
-  geom_point() +
-  geom_smooth()
+ggplot(
+    mtcars,
+    aes(
+        x = mpg,
+        y = disp
+    )
+) +
+    geom_point() +
+    geom_smooth()
 ```
 
 #### Use multiple datasets in the same plot
 Contents of the columns used as axes have to match
 Each geom using it's own data needs to have "data = " in it
 ```{r}
-ggplot(summarized_hp,
-       aes(x = as.factor(cyl),
-           y = mean_hp)) +
-  geom_col() +
-  geom_errorbar(aes(ymin = mean_hp - sd_hp,
-                    ymax = mean_hp + sd_hp),
-                width = 0.5) +
-  geom_point(data = mtcars,
-             aes(x = as.factor(cyl),
-                 y = hp),
-             color = "red")
+ggplot(
+    summarized_hp,
+    aes(
+        x = as.factor(cyl),
+        y = mean_hp
+    )
+) +
+    geom_col() +
+    geom_errorbar(
+        aes(
+            ymin = mean_hp - sd_hp,
+            ymax = mean_hp + sd_hp
+        ),
+        width = 0.5
+    ) +
+    geom_jitter(
+        data = mtcars,
+        aes(
+            x = as.factor(cyl),
+            y = hp
+        ),
+        color = "red"
+    )
 ```
 
 #### labs()
 Add labels
 ```{r}
 ggplot(mtcars) +
-  geom_point(aes(x = hp, y = disp)) +
-  labs(x = "X label goes here",
-       y = "Y label goes here",
-       title = "This is a title",
-       subtitle = "Subtitle!",
-       caption = "Cannon et al, 2034!",
-       tag = "A")
+    geom_point(aes(x = hp, y = disp)) +
+    labs(
+        x = "X label goes here",
+        y = "Y label goes here",
+        title = "This is a title",
+        subtitle = "Subtitle!",
+        caption = "Cannon et al, 2034!",
+        tag = "A"
+    )
 ```
 
 #### facet_wrap() ##############################################################
 ```{r}
 dplyr::storms
 
-ggplot(dplyr::storms,
-       aes(x = pressure)) +
-  geom_histogram(bins = 100) +
-  facet_wrap(~ category + status)
+ggplot(
+    dplyr::storms,
+    aes(x = pressure)
+) +
+    geom_histogram(bins = 100) +
+    facet_wrap(~ category + status)
 
-ggplot(dplyr::storms,
-       aes(x = pressure)) +
-  geom_histogram(bins = 100) +
-  facet_wrap(~ category, scales = "free_y")
+ggplot(
+    dplyr::storms,
+    aes(x = pressure)
+) +
+    geom_histogram(bins = 100) +
+    facet_wrap(~ category, scales = "free_y")
 
-ggplot(dplyr::storms,
-       aes(x = pressure)) +
-  geom_histogram(bins = 100) +
-  facet_wrap(~ category,
-             nrow = 1,
-             scales = "free_y")
+ggplot(
+    dplyr::storms,
+    aes(x = pressure)
+) +
+    geom_histogram(bins = 100) +
+    facet_wrap(
+        ~ category,
+        nrow = 1,
+        scales = "free_y"
+    )
 ```
 
 #### theme()
@@ -280,14 +404,17 @@ https://henrywang.nl/ggplot2-theme-elements-demonstration/
 You can change just about any aspect of how the plot looks with theme()
 You'll have to look up how to change each specific bit
 ```{r}
-ggplot(storms,
-       aes(x = pressure,
-           fill = category)) +
-  # alpha sets transparency - 0 is clear, 1 is opaque
-  geom_density(alpha = 0.5) +
-  # The brewer color palettes are pretty, and "Set2" is color-blind friendly
-  scale_color_brewer(palette = "Set2") +
-  theme(legend.position = c(0.2, 0.9),
+ggplot(
+    storms,
+    aes(
+        x = pressure,
+        fill = category
+    )
+) +
+    geom_density(alpha = 0.5) +             # alpha sets transparency - 0 is clear, 1 is opaque
+    scale_color_brewer(palette = "Set2") +  # The brewer color palettes are pretty, and "Set2" is color-blind friendly
+    theme(
+        legend.position = c(0.2, 0.9),
         legend.direction = "horizontal",
         legend.key.width = unit(2, "cm"),
         legend.title = element_text(face = "bold"),
@@ -298,24 +425,31 @@ ggplot(storms,
         panel.border = element_blank(),
         axis.line.x = element_line(color = "black"),
         axis.text.y = element_blank(),
-        axis.ticks.y = element_blank())
+        axis.ticks.y = element_blank()
+    )
 ```
 
 ### ggsave()
 ```{r}
-ggsave("examplePlot.png",
-       width = 10,
-       height = 8)
+ggsave(
+    "examplePlot.png",
+    width = 10,
+    height = 8
+)
 
 plot_in_variable <-
-  ggplot(dplyr::storms,
-         aes(x = pressure)) +
-  geom_histogram(bins = 100) +
-  facet_wrap(~ category)
+    ggplot(
+        dplyr::storms,
+        aes(x = pressure)
+    ) +
+    geom_histogram(bins = 100) +
+    facet_wrap(~ category)
 
 # ggsave will get the plot size from how big your "plot" windows is in the right pane if you don't specify it!!!!!
-ggsave("anotherExamplePlot.png",
-       plot = plot_in_variable)
+ggsave(
+    "anotherExamplePlot.png",
+    plot = plot_in_variable
+)
 ```
 
 ### heatmap() ##################################################################
@@ -339,55 +473,80 @@ pca_raw <- prcomp(mtcars, scale = TRUE)
 # The output of prcomp is a list
 # The element named "x" contains the actual principle components
 # Though, it needs to be converted from a matrix to a dataframe for ggplot
-pc_values <- pca_raw$x %>%
-  as.data.frame() %>%
-  rownames_to_column("car_make")
+pc_values <-
+    pca_raw$x %>%
+    as.data.frame() %>%
+    rownames_to_column("car_make")
 
-ggplot(pc_values, aes(x = PC1, y = PC2)) +
-  geom_point() +
-  ggrepel::geom_text_repel(aes(label = car_make))
+ggplot(
+    pc_values,
+    aes(
+        x = PC1,
+        y = PC2
+    )
+) +
+    geom_point() +
+    ggrepel::geom_text_repel(aes(label = car_make))
 ```
 
 ## Activity
 
-## Recreate plots from paper
+## Recreate plots from a paper
 
-Data is from https://doi.org/10.1371/journal.pbio.2005756
+- Data is from https://doi.org/10.1371/journal.pbio.2005756
+    - Najafov A, Zervantonakis IK, Mookhtiar AK, Greninger P, March RJ, Egan RK, et al. (2018) BRAF and AXL oncogenes drive RIPK3 expression loss in cancer. PLoS Biol 16(8): e2005756. https://doi.org/10.1371/journal.pbio.2005756
+- I downloaded their figure data and made it easier to import:
+    - Fig1A_partial.txt
+    - Fig1C.txt
+    - Fig2F.txt
+    - Fig3F.txt
+- You can see what the plots should look like in the corresponding files in materials/Figure_***.png files
+- You don't have to make them look exact, feel free to play around with how you want them to look
 
-Najafov A, Zervantonakis IK, Mookhtiar AK, Greninger P, March RJ, Egan RK, et al. (2018) BRAF and AXL oncogenes drive RIPK3 expression loss in cancer. PLoS Biol 16(8): e2005756. https://doi.org/10.1371/journal.pbio.2005756
-
-I downloaded their figure data and made it easier to import:
--   Fig1A_partial.txt
--   Fig1C.txt
--   Fig2F.txt
--   Fig3F.txt
-
-#### Figure 1A – geom_boxplot()
+#### Figure 1A - geom_boxplot()
 ```{r}
 
 ```
 
-#### Figure 1C – heatmap()
+#### Figure 1C - heatmap()
 ```{r}
 
 ```
 
-#### Figure 2F – geom_point()
+#### Figure 2F - geom_point()
 ```{r}
 
 ```
 
-#### Figure 3F – geom_col
+#### Figure 3F - geom_col
 use geom_errorbars()
 and facet_wrap() to split the plots by cell_line
 ```{r}
 
 ```
 
-## If you’re super fast:
+## If you're super fast:
 Keep going, do the rest 🙃
 
 Download the data from the supplemental data here:
 
 https://doi.org/10.1371/journal.pbio.2005756.s001
 
+
+####
+# You're done! You made it through introduction to R!
+####
+
+Suggestions for what to do next:
+- Try to practice working in R as much as you can
+- Find ways that R can be useful for you and explore packages that are useful for the type of work you do
+- You're still learning! Don't get down on yourself when you struggle, because you will
+    - The better you get at R, the less you'll struggle, but everyone runs into problems
+- Read the documentation for functions/packages you think you'll use a lot
+- Make all the errors!
+    - Then google them and try to understand what went wrong
+- Go back through and re-read the materials to reinforce what you've learned and pick up little details you may have missed
+- If you're going to the SCRGOT single cell workshop, do some reading on Seurat
+    - https://satijalab.org/seurat/
+- The teams channel from the workshop shouldn't get deleted right away, so if you have problems, post there to see if people can help
+    - Also, if other people post, read what problems they ran into and try to learn from it
