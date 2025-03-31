@@ -210,11 +210,6 @@ Use t.test() function
 
 ```
 
-### Barplots
-Use barplot()
-```{r plots}
-
-```
 
 ### I'm super fast
 Help someone around you who may be struggling
