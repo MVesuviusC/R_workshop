@@ -79,13 +79,14 @@ mtcars[1:10, ]
 ```
 
 ### Vectors
-- A vector is a list of things. It has to all be the *same data type*.
+- A vector is a group of things. It has to all be the *same data type*.
     - All numbers, words, etc.
 - You can create a vector with the `c()` function.
     - `c()` stands for "combine".
 - Vectors have only one dimension.
 - You can subset a vector with square brackets `[ ]`.
     - But you only need one number or group of numbers since the data are 1D.
+    - Can also use boolean (TRUE/FALSE) values to subset data
 
 ```{r}
 # A vector
@@ -95,6 +96,8 @@ my_vector <- c(1, 2, 3, 4, 5)
 my_vector[1]
 # First three elements
 my_vector[1:3]
+
+my_vector[c(TRUE, TRUE, FALSE, FALSE, TRUE)]
 ```
 
 ## Functions for today's activity
@@ -212,7 +215,10 @@ select(mtcars, -mpg, -disp) |>
     head()
 
 select(mtcars, !mpg, !disp) |>
-    head(n = 4)
+    head(., n = 4)
+
+4 %>%
+    head(mtcars, n = .)
 
 select(mtcars, !mpg, !disp) %>%
     head(n = 4)
@@ -227,7 +233,7 @@ head(select(mtcars, mpg, disp))
 hist(rnorm(n = 1000, mean = 200, sd = 20), n = 100)
 
 rnorm(n = 1000, mean = 200, sd = 20) |>
-    hist(x = ., n = 100)
+    hist(n = 100)
 ```
 
 ### aov()

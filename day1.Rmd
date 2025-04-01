@@ -100,7 +100,8 @@ Reading function documentation
 
 Key parts of the help documentation
 - Description: What the function does
-- Usage: shows how to use the function. You can also see defaults for arguments here.
+- Usage: shows how to use the function. 
+- **You can also see defaults for arguments here.**
 - Arguments: What the arguments are and what they do
 - Details: More information about the function
 - Value: What the function returns
