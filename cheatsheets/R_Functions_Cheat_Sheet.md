@@ -319,12 +319,12 @@ Plots a histogram to display the distribution of numeric data.
 
 **Usage:**
 ```r
-hist(x, breaks = "Sturges")
+hist(x, n = 100)
 ```
 
 **Frequently Used Arguments:**
 - `x`: Numeric vector.
-- `breaks`: Binning parameter.
+- `n`: Number of bins.
 
 ---
 
