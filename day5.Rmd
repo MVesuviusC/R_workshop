@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Load libraries
 ```{r}
 library(tidyverse)
+
 ```
 
 # Day 5
@@ -36,8 +37,8 @@ library(tidyverse)
 
 ggplot(                         # This makes your "canvas"
     data_frame_here,            # The data you're using - must be a long form data.frame or tibble
-    aes(                        # "Aesthetics" - x, y, colors, shapes, etc  - This will be applied to all layers unless overwritten
-        x = x here,             # The name of the column that has your x values - note that you don't put this in quotes
+    aes(                        # "Aesthetics" - x, y, colors, etc  - Applies to all layers unless overwritten
+        x = x here,             # The name of the column that has your x values - note: don't put this in quotes
         y = y here,             # The name of the column that has your y values
         other stuff             # You can specify a lot of things here - check the documentation
     )
@@ -48,7 +49,10 @@ ggplot(                         # This makes your "canvas"
     other_stuff +                   # You can add other things like themes, labels, etc
     more_stuff +
     change_how_something_looks +
-    modify_the_plot_somehow         # You can really customize the plot and the code can get quite long. Thinking about it as layers can help keep track of what you're doing
+    modify_the_plot_somehow         
+    
+
+You can really customize the plot and the code can get quite long. Thinking about it as layers can help keep track of what you're doing
 
 
 
@@ -216,11 +220,9 @@ ggplot(
     geom_errorbar(
         aes(
             ymin = mean_hp - sd_hp,
-            ymax = mean_hp + sd_hp,
-            xmin = 2,
-            xmax = 2
+            ymax = mean_hp + sd_hp
         ),
-        width = 0.5,
+        width = 0.2,
         color = "red"
     )
 
