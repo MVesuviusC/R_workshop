@@ -1,0 +1,76 @@
+## Activity
+- Use titanic.csv
+    - This file is located in the `materials` folder.
+    - This is real data on titanic passengers
+    - Survived: 1 = yes, 0 = no
+- Explore the data
+- Make variables that contain average, median, max and min values for age and fare
+    - Do the same, but split the data by male/female
+- Plot a histogram of age for all the data
+    - Plot only the survivors as a second plot
+- If you're super fast:
+    - Help someone around you who may be struggling
+    - Use table() to compare how many men/women survived
+    - Use aov() to see which factors influenced survival most
+
+### Read in and check out the Titanic data
+```{r}
+titanic_data <- read.csv("materials/titanic.csv")
+```
+
+### Make variables that contain the Mean/median/min/max of age/fare
+```{r}
+mean_age <- mean(titanic_data$Age)
+
+median_age <- median(titanic_data$Age)
+
+min_age <- min(titanic_data$Age)
+
+max_age <- max(titanic_data$Age)
+
+
+mean_fare <- mean(titanic_data$Fare)
+
+median_fare <- median(titanic_data$Fare)
+
+min_fare <- min(titanic_data$Fare)
+
+max_fare <- max(titanic_data$Fare)
+```
+
+### Use filter to make two new dataframe variables with just male and female only and then calculate the mean/median values for age and fare
+Basically, calculate the mean/median age and fare for men vs women
+```{r}
+male_data <- filter(titanic_data, Sex == "male")
+
+mean_male_age <- mean(male_data$Age)
+mean_male_fare <- mean(male_data$Fare)
+
+female_data <- filter(titanic_data, Sex == "female")
+
+mean_female_age <- mean(female_data$Age)
+mean_female_fare <- mean(female_data$Fare)
+```
+
+### Make a histogram of the age all passengers
+```{r}
+hist(titanic_data$Age, n = 100)
+```
+
+### Make another histogram for only passengers who survived
+
+## If you're super fast
+
+### Use `aov()` to test which factors influenced who survived the titanic disaster
+```{r}
+aov(Survived ~ Sex + Age + Fare, data = titanic_data) %>%
+    summary()
+```
+
+### Use table() to compare how many women vs men survived
+```{r}
+table(titanic_data$Sex, titanic_data$Survived)
+
+table(titanic_data$Sex, titanic_data$Survived) %>%
+    prop.table(margin = 1)
+```

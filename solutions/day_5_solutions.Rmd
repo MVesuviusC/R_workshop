@@ -1,0 +1,120 @@
+## Activity
+
+## Recreate plots from a paper
+
+- Data is from https://doi.org/10.1371/journal.pbio.2005756
+    - Najafov A, Zervantonakis IK, Mookhtiar AK, Greninger P, March RJ, Egan RK, et al. (2018) BRAF and AXL oncogenes drive RIPK3 expression loss in cancer. PLoS Biol 16(8): e2005756. https://doi.org/10.1371/journal.pbio.2005756
+- I downloaded their figure data and made it easier to import:
+    - Fig1A_partial.txt
+    - Fig1C.txt
+    - Fig2F.txt
+    - Fig3F.txt
+- You can see what the plots should look like in the corresponding files in materials/Figure_***.png files
+- You don't have to make them look exact, feel free to play around with how you want them to look
+
+```{r}
+library(tidyverse)
+```
+
+#### Figure 1A - geom_boxplot()
+```{r}
+read_tsv("materials/Fig1A_partial.txt") %>%
+    pivot_longer(
+        cols = !cancer_type,
+        names_to = "week",
+        values_to = "value"
+    ) %>%
+    ggplot(
+        aes(
+            x = week,
+            y = value
+        )
+    ) +
+    geom_boxplot(fill = "darkgreen") +
+    facet_wrap(~ cancer_type) +
+    theme_bw()
+
+# If you want to get rid of the empty "20wk" for Gastric
+read_tsv("materials/Fig1A_partial.txt") %>%
+    pivot_longer(
+        cols = !cancer_type,
+        names_to = "week",
+        values_to = "value"
+    ) %>%
+    na.omit() %>% # Get rid of any row with "NA" values
+    ggplot(
+        aes(
+            x = week,
+            y = value
+        )
+    ) +
+    geom_boxplot(fill = "darkgreen") +
+    facet_wrap(~ cancer_type, scales = "free_x") + # scales = "free_x" allows the x axis to be different for each facet
+    theme_bw()
+```
+
+#### Figure 1C - heatmap()
+```{r}
+read_tsv("materials/Fig1C.txt") %>%
+    column_to_rownames("cell_line") %>%
+    as.matrix() %>%
+    heatmap()
+
+# use pheatmap
+read_tsv("materials/Fig1C.txt") %>%
+    column_to_rownames("cell_line") %>%
+    pheatmap::pheatmap(scale = "row")
+```
+
+#### Figure 2F - geom_point()
+Note that the authors didn't provide all the data to remake the plot properly
+```{r}
+read_tsv("materials/Fig2F.txt") %>%
+    rename(
+        pearson = `Pearson coefficient`,
+        pval = `Bonferroni pvalue`,
+        gene = `Gene Symbols`              # You could also just edit the file
+    ) %>%
+    ggplot(
+        aes(
+            x = pearson,
+            y = -log10(pval)
+        )
+    ) +
+    geom_point(size = 5, shape = 1) +
+    ggrepel::geom_text_repel(aes(label = gene)) +
+    theme_bw() +
+    labs(x = "Pearson Correlation Coefficient",
+         y = "-log10(Bonferroni p-value)")
+```
+
+#### Figure 3F - geom_col
+use geom_errorbars()
+and facet_wrap() to split the plots by cell_line
+
+I edited the file to remove the � character and replace with "u"
+```{r}
+read_tsv("materials/Fig3F.txt") %>%
+    ggplot(
+        aes(
+            x = BMS_777607_concentration,
+            y = Avg,
+            fill = treatment
+        )
+    ) +
+    geom_col(position = "dodge") + # Make the colummns not overlap
+    geom_errorbar(
+        aes(
+            ymin = Avg - SEM,
+            ymax = Avg + SEM
+        ),
+        position = position_dodge(width = 0.9),
+        color = "white",
+        width = 0.5
+    ) +
+    scale_fill_manual(values = c("black", "blue")) +
+    facet_wrap(~ cell_line) +
+    coord_cartesian(
+        ylim = c(50, 110) # this trims the y-axis to only show 50-110
+    )
+```

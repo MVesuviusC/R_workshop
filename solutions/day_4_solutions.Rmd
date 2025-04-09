@@ -1,0 +1,67 @@
+## Activity
+
+- These activities will be a bit of synthesis of stuff from previous days
+- use `starwars <- starwars` to get pre-loaded practice data
+- Get rid of the "films", "vehicles" and "starships" columns using `select()` and save it as a new variable
+- Write a for loop to loop over the column names in your new variable
+    - Inside the loop, if the column contains numeric data, make a histogram of it
+    - Otherwise, use `table()` to get counts of categories
+        - Look at the help documentation for `table()` to see how to use it
+- If you're super fast:
+    - Help someone who is struggling (loops can be confusing)
+    - Write a while loop to count the sum of all integers whose squared value is less than 1,234,567
+    - You should get 617,716
+
+### Get the starwars data and look at it
+library(tidyverse) # load the tidyverse library
+starwars <- starwars # to get data
+
+```{r}
+library(tidyverse)
+
+starwars <- starwars
+starwars <- starwars %>%
+    select(-films, -vehicles, -starships)
+```
+### Write a for loop using over the “starwars” column names
+Inside the loop, if the column contains numeric data, make a histogram of it
+Otherwise, use table() to get counts
+
+- Useful ideas/functions here:
+    - is.numeric()
+    - this_column_name <- "height"
+    - starwars[[this_column_name]] # same as starwars$height to select a column
+
+```{r}
+for (col in colnames(starwars)) {
+    if (is.numeric(starwars[[col]])) {
+        hist(starwars[[col]], main = col, xlab = col)
+    } else {
+        print(table(starwars[[col]]))
+    }
+    Sys.sleep(1)
+}
+```
+
+
+## If you're super fast:
+Help someone who is struggling (loops can be confusing)
+
+### Write a while loop to count the sum of all numbers whose squared value is less than 1,234,567
+
+```{r}
+sum <- 0
+i <- 1
+while (i^2 < 1234567) {
+    sum <- sum + i
+    i <- i + 1
+}
+print(sum)
+```
+1^2 < 1,234,567   # add 1 to sum total
+2^2 < 1,234,567   # add 2 to sum total
+3^2 < 1,234,567   # add 3 to sum total
+.
+.
+.
+X^2 > 1,234,567   # stop here

@@ -1,0 +1,123 @@
+## Activity
+- Use patientGroups.txt and exercise.txt from the materials folder
+    - patientGroups is patient # and who received treatment
+    - Exercise is the how many minutes each patient exercised across five days
+- Combine the datasets into a single data.frame
+- Pivot the data to long form
+    - Columns: patient, day, exercise_min, glucose, trt_group
+- Save the pivoted data.frame to a text file with write.table()
+- Make a new column by multiplying glucose by 1000
+- Calculate the average daily minutes of exercise per patient
+- If you're super fast:
+    - Help someone who is struggling
+    - Plot glucose levels for each group (treated/control)
+    - Test if they're statistically different
+    - Plot daily exercise minutes per group
+    - Test if exercise minutes was statistically different between groups
+
+### Read in patientGroups.txt and exercise.txt
+patientGroups.txt is:
+
+-   patient #
+-   treatment groups
+-   final blood glucose measurements
+
+exercise.txt is:
+
+-   patient #
+-   how many minutes each patient exercised across five days
+
+```{r}
+patient_groups <- read.table("materials/patientGroups.txt", header = TRUE, sep = "\t")
+
+exercise_data <- read_tsv("materials/exercise.txt")
+```
+
+### Combine the datasets into a single data.frame
+```{r}
+combined_data <- left_join(patient_groups, exercise_data, by = "patient")
+```
+
+### Pivot the data to long form
+Columns should be patient, day, exercise_min, glucose
+```{r}
+long_combined_data <-
+    combined_data %>%
+    pivot_longer(
+        cols = starts_with("day"),
+        names_to = "day",
+        values_to = "exercise_min"
+    )
+
+# could also do
+combined_data %>%
+    pivot_longer(
+        cols = c(day_1, day_2, day_3, day_4, day_5),
+        names_to = "day",
+        values_to = "exercise_min"
+    )
+
+# Or
+combined_data %>%
+    pivot_longer(
+        cols = c(-patient, -trt_group, -glucose),
+        names_to = "day",
+        values_to = "exercise_min"
+    )
+```
+
+### Save the pivoted data.frame to a text file with write.table() or write_tsv()
+```{r}
+write_tsv(long_combined_data, "long_combined_data.txt")
+```
+
+### Make a new column where glucose is multiplied by 1000
+```{r}
+long_combined_data <-
+    long_combined_data %>%
+    mutate(glucose = glucose * 1000)
+```
+
+### Calculate the average daily minutes of exercise per patient
+```{r}
+ave_exercise <-
+    long_combined_data %>%
+    group_by(patient) %>%
+    summarise(ave_exercise = mean(exercise_min, na.rm = TRUE))
+```
+
+## If you're super fast
+
+### Plot glucose levels for each group (treated/control)
+```{r}
+plot(
+    as.factor(long_combined_data$trt_group),
+    long_combined_data$glucose,
+    main = "Glucose Levels by Treatment Group"
+)
+```
+
+### Test if glucose levels are statistically different between groups
+```{r}
+t.test(
+    glucose ~ trt_group,
+    data = long_combined_data
+)
+```
+
+### Plot daily exercise minutes per group
+```{r}
+plot(
+    as.factor(long_combined_data$trt_group),
+    long_combined_data$exercise_min,
+    main = "Daily Exercise Minutes by Treatment Group"
+)
+```
+
+### Test if exercise minutes is statistically different between groups
+```{r}
+t.test(
+    exercise_min ~ trt_group,
+    data = long_combined_data
+)
+```

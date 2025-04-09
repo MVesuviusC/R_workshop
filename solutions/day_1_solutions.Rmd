@@ -1,0 +1,34 @@
+## Activity
+
+- Read in “westernQuant.txt” using either read.delim() or the GUI
+    - The file can be found in the materials folder. Make sure you tell R where to find it.
+    - This is fake data of quantified western blot band intensities
+- Use summary() to look at the data
+- Use t.test() to test if intensity varies between groups
+- Make two plot()s of the two groups
+    - Make x-axis group_name for a first plot
+    - Make x-axis group_number for a second plot
+- Extra task if you're super fast and got done quick
+    - Look up wilcox.test() and use it to compare between groups
+
+If you have trouble, look at how I used these functions above as reference, or check out the documentation.
+
+### Read in data
+Use read.delim()
+```{r readData}
+western_quant <- read.delim("materials/westernQuant.txt", header = TRUE, sep = "\t")
+```
+
+### Summarize the data.frame
+Use summary()
+```{r summaryWestern}
+summary(western_quant)
+```
+
+### Test for group differences
+Use t.test() function
+```{r testDiff}
+t_test_out <- t.test(western_quant$intensity ~ western_quant$group_name)
+
+t_test_out
+```
