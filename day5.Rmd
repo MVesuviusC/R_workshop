@@ -65,13 +65,13 @@ I put the rest in here for reference. If you go through it I've tried to drop in
 Add a scatterplot layer to the plot
 ```{r}
 ggplot(
-    mtcars,
-    aes(
-        x = hp,
-        y = carb
-    )
+  mtcars,
+  aes(
+    x = hp,
+    y = carb
+  )
 ) +
-    geom_point()
+  geom_point()
 
 # Set the overall look of the plot - I like the white background better than gray
 # This will apply to all plots you make after you run this code, so you only need to run it once per session
@@ -79,14 +79,14 @@ theme_set(theme_bw()) # Changes default colors
 theme_update(plot.title = element_text(hjust = 0.5)) # Force title to be in the center
 
 ggplot(
-    mtcars,
-    aes(
-        x = hp,
-        y = carb
-    )
+  mtcars,
+  aes(
+    x = hp,
+    y = carb
+  )
 ) +
-    geom_point() +
-    theme_bw()
+  geom_point() +
+  theme_bw()
 ```
 
 #### aes() ################################################
@@ -118,29 +118,29 @@ If it is in the aes() call inside of ggplot() `ggplot(aes(...))`
 
 ```{r}
 mtcars %>%
-    ggplot(
-        aes(
-            x = as.factor(cyl),
-            y = hp
-        )
-    ) +
-    geom_boxplot(
-        color = "red", # These specifications aren't in aes()
-        fill = "blue", # They apply to everything and we give specific values
-        size = 4
+  ggplot(
+    aes(
+      x = as.factor(cyl),
+      y = hp
     )
+  ) +
+  geom_boxplot(
+    color = "red", # These specifications aren't in aes()
+    fill = "blue", # They apply to everything and we give specific values
+    size = 4
+  )
 
 ggplot(
-    mtcars,
-    aes(
-        x = hp, # These specifications are in aes()
-        y = carb, # They apply to parts of the plot
-        color = as.factor(vs), # They show up in the legend
-        shape = as.factor(gear), # We give column names that have the groups we'll use
-        size = disp
-    )
+  mtcars,
+  aes(
+    x = hp, # These specifications are in aes()
+    y = carb, # They apply to parts of the plot
+    color = as.factor(vs), # They show up in the legend
+    shape = as.factor(gear), # We give column names that have the groups we'll use
+    size = disp
+  )
 ) +
-    geom_point()
+  geom_point()
 ```
 
 #### geom_histogram()
@@ -150,10 +150,10 @@ ggplot(
 hist(storms$pressure, n = 200)
 
 ggplot(
-    storms,
-    aes(x = pressure)
+  storms,
+  aes(x = pressure)
 ) +
-    geom_histogram(bins = 200)
+  geom_histogram(bins = 200)
 ```
 
 #### geom_density()
@@ -162,86 +162,86 @@ ggplot(
 - This can actually hide some of the nuance in your data
 ```{r}
 ggplot(
-    storms,
-    aes(
-        x = pressure,
-        fill = as.factor(category)
-    )
+  storms,
+  aes(
+    x = pressure,
+    fill = as.factor(category)
+  )
 ) +
-    geom_density(alpha = 0.1, adjust = 0.5) + # alpha sets transparency -- 0 is clear, 1 is opaque
-    scale_color_brewer(palette = "Set2") # The brewer color palettes are pretty, and "Set2" is color-blind friendly
+  geom_density(alpha = 0.1, adjust = 0.5) + # alpha sets transparency -- 0 is clear, 1 is opaque
+  scale_color_brewer(palette = "Set2") # The brewer color palettes are pretty, and "Set2" is color-blind friendly
 ```
 
 #### geom_col() ################################################################
 Add a barplot layer to the plot
 ```{r}
 mtcars %>%
-    rownames_to_column("car_make") %>% # This makes the row names a column so we can use it in the plot
-    mutate(car_make = str_remove(car_make, " .+")) %>% # This removes everything after the first space in the car_make column
-    ggplot(
-        aes(
-            x = car_make,
-            y = hp
-        )
-    ) +
-    geom_col(color = "red") +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    ggtitle("this is a title") +
-    theme_update(plot.title = element_text(hjust = 0.5))
+  rownames_to_column("car_make") %>% # This makes the row names a column so we can use it in the plot
+  mutate(car_make = str_remove(car_make, " .+")) %>% # This removes everything after the first space in the car_make column
+  ggplot(
+    aes(
+      x = car_make,
+      y = hp
+    )
+  ) +
+  geom_col(color = "red") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  ggtitle("this is a title") +
+  theme_update(plot.title = element_text(hjust = 0.5))
 
 mtcars %>%
-    rownames_to_column("car_make") %>%
-    ggplot(aes(y = car_make, x = hp)) +
-    geom_col()
+  rownames_to_column("car_make") %>%
+  ggplot(aes(y = car_make, x = hp)) +
+  geom_col()
 ```
 
 #### geom_errorbar()###########################################################
 Add error bars as a layer to plot
 ```{r}
 summarized_hp <-
-    mtcars %>%
-    group_by(cyl) %>%
-    summarize(
-        mean_hp = mean(hp),
-        sd_hp = sd(hp)
-    )
+  mtcars %>%
+  group_by(cyl) %>%
+  summarize(
+    mean_hp = mean(hp),
+    sd_hp = sd(hp)
+  )
 
 summarized_hp
 
 ggplot(
-    summarized_hp,
-    aes(
-        x = as.factor(cyl),
-        y = mean_hp
-    )
+  summarized_hp,
+  aes(
+    x = as.factor(cyl),
+    y = mean_hp
+  )
 ) +
-    geom_col() +
-    geom_errorbar(
-        aes(
-            ymin = mean_hp - sd_hp,
-            ymax = mean_hp + sd_hp
-        ),
-        width = 0.2,
-        color = "red"
-    )
+  geom_col() +
+  geom_errorbar(
+    aes(
+      ymin = mean_hp - sd_hp,
+      ymax = mean_hp + sd_hp
+    ),
+    width = 0.2,
+    color = "red"
+  )
 
 # This has error bars in the back since that layer was added first!
 ggplot(
-    summarized_hp,
-    aes(
-        x = as.factor(cyl),
-        y = mean_hp
-    )
+  summarized_hp,
+  aes(
+    x = as.factor(cyl),
+    y = mean_hp
+  )
 ) +
-    geom_errorbar(
-        aes(
-            ymin = mean_hp - sd_hp,
-            ymax = mean_hp + sd_hp
-        ),
-        color = "red"
-    ) +
-    geom_bar(stat = "identity") +
-    geom_point(color = "blue")
+  geom_errorbar(
+    aes(
+      ymin = mean_hp - sd_hp,
+      ymax = mean_hp + sd_hp
+    ),
+    color = "red"
+  ) +
+  geom_bar(stat = "identity") +
+  geom_point(color = "blue")
 ```
 
 #### geom_jitter()
@@ -249,63 +249,63 @@ Drop-in replacement for geom_point()
 Adds noise in x and y directions by default so you can see individual points
 ```{r}
 ggplot(
-    summarized_hp,
-    aes(
-        x = as.factor(cyl),
-        y = mean_hp
-    )
+  summarized_hp,
+  aes(
+    x = as.factor(cyl),
+    y = mean_hp
+  )
 ) +
-    geom_col() +
-    geom_errorbar(
-        aes(
-            ymin = mean_hp - sd_hp,
-            ymax = mean_hp + sd_hp
-        )
-    ) +
-    geom_jitter(
-        data = mtcars, # Note that we can provide an individual geom it's own data
-        aes(
-            x = as.factor(cyl),
-            y = hp
-        ),
-        color = "red", height = 0
+  geom_col() +
+  geom_errorbar(
+    aes(
+      ymin = mean_hp - sd_hp,
+      ymax = mean_hp + sd_hp
     )
+  ) +
+  geom_jitter(
+    data = mtcars, # Note that we can provide an individual geom it's own data
+    aes(
+      x = as.factor(cyl),
+      y = hp
+    ),
+    color = "red", height = 0
+  )
 ```
 
 #### ggbeeswarm package
 Adds noise in x direction and pulls things to the center to make it look nicer than jitter
 ```{r}
 ggplot(
-    summarized_hp,
-    aes(
-        x = as.factor(cyl),
-        y = mean_hp
-    )
+  summarized_hp,
+  aes(
+    x = as.factor(cyl),
+    y = mean_hp
+  )
 ) +
-    geom_col() +
-    geom_errorbar(
-        aes(
-            ymin = mean_hp - sd_hp,
-            ymax = mean_hp + sd_hp
-        )
-    ) +
-    ggbeeswarm::geom_beeswarm(
-        data = mtcars,
-        aes(
-            x = as.factor(cyl),
-            y = hp
-        ),
-        color = "red"
+  geom_col() +
+  geom_errorbar(
+    aes(
+      ymin = mean_hp - sd_hp,
+      ymax = mean_hp + sd_hp
     )
+  ) +
+  ggbeeswarm::geom_beeswarm(
+    data = mtcars,
+    aes(
+      x = as.factor(cyl),
+      y = hp
+    ),
+    color = "red"
+  )
 ```
 
 #### geom_boxplot() ############################################################
 Boxplots!
 ```{r}
 mtcars %>%
-    ggplot(aes(x = as.factor(cyl), y = hp)) +
-    geom_boxplot() +
-    geom_violin(adjust = 1, fill = "red", alpha = 0.5)
+  ggplot(aes(x = as.factor(cyl), y = hp)) +
+  geom_boxplot() +
+  geom_violin(adjust = 1, fill = "red", alpha = 0.5)
 ```
 
 #### geom_smooth
@@ -314,14 +314,14 @@ Can specify the type of regression with `method`
 Can remove gray confidence interval with `se = FALSE`
 ```{r}
 ggplot(
-    mtcars,
-    aes(
-        x = mpg,
-        y = disp
-    )
+  mtcars,
+  aes(
+    x = mpg,
+    y = disp
+  )
 ) +
-    geom_point() +
-    geom_smooth()
+  geom_point() +
+  geom_smooth()
 ```
 
 #### Use multiple datasets in the same plot
@@ -329,43 +329,43 @@ Contents of the columns used as axes have to match
 Each geom using it's own data needs to have "data = " in it
 ```{r}
 ggplot(
-    summarized_hp,
-    aes(
-        x = as.factor(cyl),
-        y = mean_hp
-    )
+  summarized_hp,
+  aes(
+    x = as.factor(cyl),
+    y = mean_hp
+  )
 ) +
-    geom_col() +
-    geom_errorbar(
-        aes(
-            ymin = mean_hp - sd_hp,
-            ymax = mean_hp + sd_hp
-        ),
-        width = 0.5
-    ) +
-    geom_jitter(
-        data = mtcars,
-        aes(
-            x = as.factor(cyl),
-            y = hp
-        ),
-        color = "red"
-    )
+  geom_col() +
+  geom_errorbar(
+    aes(
+      ymin = mean_hp - sd_hp,
+      ymax = mean_hp + sd_hp
+    ),
+    width = 0.5
+  ) +
+  geom_jitter(
+    data = mtcars,
+    aes(
+      x = as.factor(cyl),
+      y = hp
+    ),
+    color = "red"
+  )
 ```
 
 #### labs()
 Add labels
 ```{r}
 ggplot(mtcars) +
-    geom_point(aes(x = hp, y = disp)) +
-    labs(
-        x = "X label goes here",
-        y = "Y label goes here",
-        title = "This is a title",
-        subtitle = "Subtitle!",
-        caption = "Cannon et al, 2034!",
-        tag = "A"
-    )
+  geom_point(aes(x = hp, y = disp)) +
+  labs(
+    x = "X label goes here",
+    y = "Y label goes here",
+    title = "This is a title",
+    subtitle = "Subtitle!",
+    caption = "Cannon et al, 2034!",
+    tag = "A"
+  )
 ```
 
 #### facet_wrap() ##############################################################
@@ -373,29 +373,29 @@ ggplot(mtcars) +
 dplyr::storms
 
 ggplot(
-    dplyr::storms,
-    aes(x = pressure)
+  dplyr::storms,
+  aes(x = pressure)
 ) +
-    geom_histogram(bins = 100) +
-    facet_wrap(~ category + status)
+  geom_histogram(bins = 100) +
+  facet_wrap(~ category + status)
 
 ggplot(
-    dplyr::storms,
-    aes(x = pressure)
+  dplyr::storms,
+  aes(x = pressure)
 ) +
-    geom_histogram(bins = 100) +
-    facet_wrap(~category, scales = "free_y")
+  geom_histogram(bins = 100) +
+  facet_wrap(~category, scales = "free_y")
 
 ggplot(
-    dplyr::storms,
-    aes(x = pressure)
+  dplyr::storms,
+  aes(x = pressure)
 ) +
-    geom_histogram(bins = 100) +
-    facet_wrap(
-        ~category,
-        nrow = 1,
-        scales = "free_y"
-    )
+  geom_histogram(bins = 100) +
+  facet_wrap(
+    ~category,
+    nrow = 1,
+    scales = "free_y"
+  )
 ```
 
 #### theme()
@@ -406,50 +406,50 @@ You can change just about any aspect of how the plot looks with theme()
 You'll have to look up how to change each specific bit
 ```{r}
 ggplot(
-    storms,
-    aes(
-        x = pressure,
-        fill = category
-    )
+  storms,
+  aes(
+    x = pressure,
+    fill = category
+  )
 ) +
-    geom_density(alpha = 0.5) + # alpha sets transparency - 0 is clear, 1 is opaque
-    scale_color_brewer(palette = "Set2") + # The brewer color palettes are pretty, and "Set2" is color-blind friendly
-    theme(
-        legend.position = c(0.2, 0.9),
-        legend.direction = "horizontal",
-        legend.key.width = unit(2, "cm"),
-        legend.title = element_text(face = "bold"),
-        strip.background = element_rect(color = "white", fill = "white"),
-        strip.text.x = element_text(size = 30, face = "bold"),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.border = element_blank(),
-        axis.line.x = element_line(color = "black"),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()
-    )
+  geom_density(alpha = 0.5) + # alpha sets transparency - 0 is clear, 1 is opaque
+  scale_color_brewer(palette = "Set2") + # The brewer color palettes are pretty, and "Set2" is color-blind friendly
+  theme(
+    legend.position = c(0.2, 0.9),
+    legend.direction = "horizontal",
+    legend.key.width = unit(2, "cm"),
+    legend.title = element_text(face = "bold"),
+    strip.background = element_rect(color = "white", fill = "white"),
+    strip.text.x = element_text(size = 30, face = "bold"),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank(),
+    axis.line.x = element_line(color = "black"),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank()
+  )
 ```
 
 ### ggsave()
 ```{r}
 ggsave(
-    "examplePlot.png",
-    width = 10,
-    height = 8
+  "examplePlot.png",
+  width = 10,
+  height = 8
 )
 
 plot_in_variable <-
-    ggplot(
-        dplyr::storms,
-        aes(x = pressure)
-    ) +
-    geom_histogram(bins = 100) +
-    facet_wrap(~category)
+  ggplot(
+    dplyr::storms,
+    aes(x = pressure)
+  ) +
+  geom_histogram(bins = 100) +
+  facet_wrap(~category)
 
 # ggsave will get the plot size from how big your "plot" windows is in the right pane if you don't specify it!!!!!
 ggsave(
-    "anotherExamplePlot.png",
-    plot = plot_in_variable
+  "anotherExamplePlot.png",
+  plot = plot_in_variable
 )
 ```
 
@@ -475,19 +475,19 @@ pca_raw <- prcomp(mtcars, scale = TRUE)
 # The element named "x" contains the actual principle components
 # Though, it needs to be converted from a matrix to a dataframe for ggplot
 pc_values <-
-    pca_raw$x %>%
-    as.data.frame() %>%
-    rownames_to_column("car_make")
+  pca_raw$x %>%
+  as.data.frame() %>%
+  rownames_to_column("car_make")
 
 ggplot(
-    pc_values,
-    aes(
-        x = PC1,
-        y = PC2
-    )
+  pc_values,
+  aes(
+    x = PC1,
+    y = PC2
+  )
 ) +
-    geom_point() +
-    ggrepel::geom_text_repel(aes(label = car_make))
+  geom_point() +
+  ggrepel::geom_text_repel(aes(label = car_make))
 ```
 
 ## Activity

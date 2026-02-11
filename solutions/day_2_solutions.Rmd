@@ -64,7 +64,7 @@ hist(titanic_data$Age, n = 100)
 ### Use `aov()` to test which factors influenced who survived the titanic disaster
 ```{r}
 aov(Survived ~ Sex + Age + Fare, data = titanic_data) %>%
-    summary()
+  summary()
 ```
 
 ### Use table() to compare how many women vs men survived
@@ -72,5 +72,5 @@ aov(Survived ~ Sex + Age + Fare, data = titanic_data) %>%
 table(titanic_data$Sex, titanic_data$Survived)
 
 table(titanic_data$Sex, titanic_data$Survived) %>%
-    prop.table(margin = 1)
+  prop.table(margin = 1)
 ```

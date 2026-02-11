@@ -66,12 +66,12 @@ plot(6)
 
 ```{r}
 bunch_o_stuff <-
-    list(
-        first = 1,
-        some_data = mtcars,
-        small_matrix = matrix(c(1, 2, 1, 2), nrow = 2),
-        dogs = c("fido", "toby")
-    )
+  list(
+    first = 1,
+    some_data = mtcars,
+    small_matrix = matrix(c(1, 2, 1, 2), nrow = 2),
+    dogs = c("fido", "toby")
+  )
 
 bunch_o_stuff$first
 bunch_o_stuff$small_matrix
@@ -101,7 +101,7 @@ bobs_age <- 85
 bobs_age > 80
 
 if (bobs_age > 80) {
-    print("Bob is probably losing hair.")
+  print("Bob is probably losing hair.")
 }
 ```
 
@@ -140,19 +140,19 @@ darrins_age <- 15
 darrins_age > 80
 
 if (darrins_age > 80) {
-    print("Darrin is probably losing hair.")
+  print("Darrin is probably losing hair.")
 } else {
-    print("Darrin has a full head of luscious hair.")
+  print("Darrin has a full head of luscious hair.")
 }
 
 ## Can test multiple conditions with else if ()
 if (darrins_age > 80) {
-    print("Darrin is probably losing hair.")
-    print("other stuff")
+  print("Darrin is probably losing hair.")
+  print("other stuff")
 } else if (darrins_age > 50) {
-    print("Darrin might be losing some hair.")
+  print("Darrin might be losing some hair.")
 } else {
-    print("Darrin has lots of hair.")
+  print("Darrin has lots of hair.")
 }
 ```
 
@@ -169,9 +169,9 @@ while (I have ice cream) {
 bettys_age <- 1
 
 while (bettys_age < 100) {
-    bettys_age <- bettys_age + 1
-    print(paste("Betty ages by a year and is now", bettys_age))
-    Sys.sleep(0.3) # This is just here so you can watch the loop happen slowly
+  bettys_age <- bettys_age + 1
+  print(paste("Betty ages by a year and is now", bettys_age))
+  Sys.sleep(0.3) # This is just here so you can watch the loop happen slowly
 }
 print("Betty died. :'-(")
 
@@ -180,15 +180,15 @@ rand_num
 
 tries <- 1
 while (rand_num < 0.999) {
-    rand_num <- rnorm(1, sd = 0.5)
-    tries <- tries + 1
-    print(
-        paste(
-            rand_num,
-            "I tried to find a number greater than 0.999", tries, "times!"
-        )
+  rand_num <- rnorm(1, sd = 0.5)
+  tries <- tries + 1
+  print(
+    paste(
+      rand_num,
+      "I tried to find a number greater than 0.999", tries, "times!"
     )
-    Sys.sleep(0.1)
+  )
+  Sys.sleep(0.1)
 }
 ```
 
@@ -203,11 +203,11 @@ while (I'm not a billionaire) {
 ```{r eval=FALSE}
 bettys_age <- 1
 while (bettys_age > 0) {
-    bettys_age <- bettys_age + 1
-    if (bettys_age > 1000) {
-        print("Holy moly!")
-    }
-    print(paste("Betty is a vampire and can never die. She is now", bettys_age))
+  bettys_age <- bettys_age + 1
+  if (bettys_age > 1000) {
+    print("Holy moly!")
+  }
+  print(paste("Betty is a vampire and can never die. She is now", bettys_age))
 }
 ```
 
@@ -233,13 +233,13 @@ for (this_kid in my_kids) {
 list_of_friends <- list("Bob", "Jack", "Jill")
 
 for (friend in list_of_friends) {
-    print(paste("I gave", friend, "a present."))
+  print(paste("I gave", friend, "a present."))
 }
 
 print(friend)
 
 for (i in 1:10) {
-    print(paste("I have", i, "ice cream cones."))
+  print(paste("I have", i, "ice cream cones."))
 }
 ```
 

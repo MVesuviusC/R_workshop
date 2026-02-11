@@ -212,16 +212,16 @@ select(mtcars, mpg, disp)
 head(select(mtcars, -mpg, -disp))
 
 select(mtcars, -mpg, -disp) |>
-    head()
+  head()
 
 select(mtcars, !mpg, !disp) |>
-    head(., n = 4)
+  head(., n = 4)
 
 4 %>%
-    head(mtcars, n = .)
+  head(mtcars, n = .)
 
 select(mtcars, !mpg, !disp) %>%
-    head(n = 4)
+  head(n = 4)
 
 # Nested functions, the inner-most function is executed first
 head(select(mtcars, mpg, disp))
@@ -233,7 +233,7 @@ head(select(mtcars, mpg, disp))
 hist(rnorm(n = 1000, mean = 200, sd = 20), n = 100)
 
 rnorm(n = 1000, mean = 200, sd = 20) |>
-    hist(n = 100)
+  hist(n = 100)
 ```
 
 ### aov()
@@ -251,22 +251,22 @@ anova_summary
 Count frequencies or combinations
 ```{r countStuff}
 table(
-    c(
-        "category a",
-        "category a",
-        "category a",
-        "category b",
-        "category b",
-        "category b"
-    ),
-    c(
-        "red",
-        "blue",
-        "red",
-        "blue",
-        "blue",
-        "blue"
-    )
+  c(
+    "is red",
+    "is blue",
+    "is red",
+    "is not red",
+    "is not red",
+    "is blue"
+  ),
+  c(
+    "red",
+    "blue",
+    "red",
+    "blue",
+    "blue",
+    "blue"
+  )
 )
 
 select(mtcars, cyl, vs)

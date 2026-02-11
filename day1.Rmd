@@ -114,7 +114,7 @@ Read a file into your environment. Remember that once you read in the data, you 
 This demo shows how read.delim() imports a tab-delimited file into a data frame. Ensure the file path is correct. We save the data in a variable called westernQuant.
 
 ```{r readAfile}
-westernQuant <- read.delim("materials/westernQuant.txt", header = TRUE)
+western_quant <- read.delim("materials/westernQuant.txt", header = TRUE)
 ```
 
 ### summary()

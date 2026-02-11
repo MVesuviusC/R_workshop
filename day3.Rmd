@@ -76,12 +76,12 @@ R thinks you have unfinished business here
 
 ```{r}
 efficient_cars <-
-    mtcars %>%
-    filter(mpg > 30)
+  mtcars %>%
+  filter(mpg > 30)
 
 gas_guzzlers <-
-    mtcars %>%
-    filter(mpg < 14.5)
+  mtcars %>%
+  filter(mpg < 14.5)
 
 rbind(efficient_cars, gas_guzzlers)
 
@@ -115,11 +115,11 @@ merge(band_members, band_instruments, all = TRUE)
 km_per_mi <- 1.60934
 
 mtcars %>%
-    mutate(kpg = mpg * km_per_mi) %>%
-    head()
+  mutate(kpg = mpg * km_per_mi) %>%
+  head()
 
 mtcars %>%
-    mutate(mpg = mpg * km_per_mi)
+  mutate(mpg = mpg * km_per_mi)
 ```
 
 ### summarize() and group_by()
@@ -131,16 +131,16 @@ mtcars %>%
 starwars is another pre-loaded data.frame play dataset
 ```{r}
 mtcars %>%
-    group_by(cyl) %>%
-    summarize(mean_mpg = mean(mpg)) %>%
-    ungroup()
+  group_by(cyl) %>%
+  summarize(mean_mpg = mean(mpg)) %>%
+  ungroup()
 
 starwars %>%
-    group_by(homeworld, species) %>%
-    summarize(
-        mean_height = mean(height),
-        max_mass = max(mass)
-    )
+  group_by(homeworld, species) %>%
+  summarize(
+    mean_height = mean(height),
+    max_mass = max(mass)
+  )
 ```
 
 ### t()
@@ -152,8 +152,8 @@ starwars %>%
 
 ```{r}
 rotated_cars <-
-    t(mtcars) %>%
-    as.data.frame()
+  t(mtcars) %>%
+  as.data.frame()
 ```
 
 ### pivot_longer()
@@ -189,35 +189,35 @@ relig_income
 
 # long data
 long_data <-
-    relig_income %>%
-    pivot_longer(
-        cols = !religion,
-        names_to = "income",
-        values_to = "count"
-    )
+  relig_income %>%
+  pivot_longer(
+    cols = !religion,
+    names_to = "income",
+    values_to = "count"
+  )
 
 # Make it wider
 wide_again <-
-    long_data %>%
-    pivot_wider(
-        names_from = "income",
-        values_from = "count"
-    )
+  long_data %>%
+  pivot_wider(
+    names_from = "income",
+    values_from = "count"
+  )
 ```
 
 ### Write a table out to a text file
 ```{r}
 write.table(
-    wide_again,
-    file = "exampleOutput.txt",
-    quote = FALSE,
-    sep = "\t",
-    row.names = FALSE
+  wide_again,
+  file = "exampleOutput.txt",
+  quote = FALSE,
+  sep = "\t",
+  row.names = FALSE
 )
 
 write_tsv(
-    wide_again,
-    file = "exampleOutputAlso.txt"
+  wide_again,
+  file = "exampleOutputAlso.txt"
 )
 ```
 

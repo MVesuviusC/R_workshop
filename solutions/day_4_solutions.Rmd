@@ -21,7 +21,7 @@ library(tidyverse)
 
 starwars <- starwars
 starwars <- starwars %>%
-    select(-films, -vehicles, -starships)
+  select(-films, -vehicles, -starships)
 ```
 ### Write a for loop using over the “starwars” column names
 Inside the loop, if the column contains numeric data, make a histogram of it
@@ -34,12 +34,12 @@ Otherwise, use table() to get counts
 
 ```{r}
 for (col in colnames(starwars)) {
-    if (is.numeric(starwars[[col]])) {
-        hist(starwars[[col]], main = col, xlab = col)
-    } else {
-        print(table(starwars[[col]]))
-    }
-    Sys.sleep(1)
+  if (is.numeric(starwars[[col]])) {
+    hist(starwars[[col]], main = col, xlab = col)
+  } else {
+    print(table(starwars[[col]]))
+  }
+  Sys.sleep(1)
 }
 ```
 
@@ -53,8 +53,8 @@ Help someone who is struggling (loops can be confusing)
 sum <- 0
 i <- 1
 while (i^2 < 1234567) {
-    sum <- sum + i
-    i <- i + 1
+  sum <- sum + i
+  i <- i + 1
 }
 print(sum)
 ```
