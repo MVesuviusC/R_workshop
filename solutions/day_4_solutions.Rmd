@@ -1,5 +1,119 @@
 ## Activity
 
+### if loops
+
+Make a variable called "my_name" and set it to your name
+
+Then write an if loop that prints out "Hello, my name is [your name]" if the variable is equal to your name
+```{r}
+my_name <- "Matt"
+
+if (my_name == "Matt") {
+  print("Hello, my name is Matt")
+}
+```
+
+Copy that loop into the chunk below and add an else statement that prints out "That's not my name" if the variable is not equal to your name
+
+Test this out by changing your variable a couple times
+```{r}
+my_name <- "Matt"
+
+if (my_name == "Matt") {
+  print("Hello, my name is Matt")
+} else {
+  print("That's not my name")
+}
+```
+
+### For loops
+
+Make a vector of your friends' names and write a for loop to print out each name
+```{r}
+friends <- c("Alice", "Bob", "Meng", "David")
+
+for (this_friend in friends) {
+  print(this_friend)
+}
+```
+
+Make a for loop to print out the column names of mtcars
+```{r}
+for (this_column in colnames(mtcars)) {
+  print(this_column)
+}
+```
+
+### While loops
+
+Make a variable with your favorite number
+
+Make another variable with the number 1 in it
+
+Write a while loop that prints out each number starting with your starting variable (1) and stops when it reaches your favorite number
+```{r}
+my_favorite_number <- 10
+i <- 1
+while (i <= my_favorite_number) {
+  print(i)
+  i <- i + 1
+}
+```
+Remember to add 1 to the variable in each iteration of the loop above so it doesn't get stuck on 1 forever!
+
+
+Write a while loop that can never end (infinite loop)
+
+Stop it (hit the stop sign in the upper right) after it's going for a bit and then think about why it was infinite. How could you change this so it is no longer infinite?
+```{r}
+i <- 1
+while (i > 0) {
+  print(i)
+  i <- i + 1
+}
+```
+
+### Nesting loops
+
+Copy your for loop from above that prints out your friends' names into the chunk below. 
+
+Make a new variable that has the name of your best friend (who should be in your list of friends). 
+
+Inside of your for loop, write an if statement to check if this friend is your best friend. If they are, print out "[name here] is my best friend!".
+
+Next add an else statement that prints out "[name here] is just a friend." if they're not your best friend.
+```{r}
+friends <- c("Alice", "Bob", "Meng", "David")
+best_friend <- "Alice"
+
+for (this_friend in friends) {
+  if (this_friend == best_friend) {
+    print(paste(this_friend, "is my best friend!"))
+  } else {
+    print(paste(this_friend, "is just a friend."))
+  }
+}
+```
+
+We're going to write the wells in a 96 well plate. Using loops!
+
+Make a variable with A through H in it. Make another variable with 1 through 12 in it. Write a for loop that goes over the letters and prints them out.
+
+After that works, put another for loop inside of the first that loops over the numbers. Inside of this second loop print out the letter and number together (e.g. "A1", "A2", etc.).
+
+```{r}
+letters <- LETTERS[1:8]
+numbers <- 1:12
+
+for (letter in letters) {
+  for (number in numbers) {
+    print(paste(letter, number, sep = ""))
+  }
+}
+```
+
+## Advanced Activities
+
 - These activities will be a bit of synthesis of stuff from previous days
 - use `starwars <- starwars` to get pre-loaded practice data
 - Get rid of the "films", "vehicles" and "starships" columns using `select()` and save it as a new variable
