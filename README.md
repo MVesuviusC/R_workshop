@@ -1,4 +1,4 @@
-# Intro to R 2025 Workshop Overview
+# Intro to R 2026 Workshop Overview
 
 This workshop is designed to build your foundation in R programming, data manipulation, and visualization over five days.
 
