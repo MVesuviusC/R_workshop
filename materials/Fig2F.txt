@@ -1,4 +1,4 @@
-Gene Symbols	Pearson coefficient	Bonferroni pvalue
+Gene	Pearson_coefficient	Bonferroni_pvalue
 CFL2	0.379271031	2.03374E-17
 TUBB2A	0.362830587	1.00372E-15
 PFN2	0.35963687	2.0864E-15
