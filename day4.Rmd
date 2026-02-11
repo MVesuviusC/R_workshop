@@ -290,11 +290,88 @@ colnames(mtcars)
 
 ## Activity
 
+### if loops
+
+Make a variable called "my_name" and set it to your name
+
+Then write an if loop that prints out "Hello, my name is [your name]" if the variable is equal to your name
+```{r}
+
+```
+
+Copy that loop into the chunk below and add an else statement that prints out "That's not my name" if the variable is not equal to your name
+
+Test this out by changing your variable a couple times
+```{r}
+
+```
+
+### For loops
+
+Make a vector of your friends' names and write a for loop to print out each name
+```{r}
+
+```
+
+Make a for loop to print out the column names of mtcars
+```{r}
+
+```
+
+### While loops
+
+Make a variable with your favorite number
+
+Make another variable with the number 1 in it
+
+Write a while loop that prints out each number starting with your starting variable (1) and stops when it reaches your favorite number
+```{r}
+
+```
+Remember to add 1 to the variable in each iteration of the loop above so it doesn't get stuck on 1 forever!
+
+
+Write a while loop that can never end (infinite loop)
+
+Stop it (hit the stop sign in the upper right) after it's going for a bit and then think about why it was infinite. How could you change this so it is no longer infinite?
+```{r}
+
+```
+
+### Nesting loops
+
+Copy your for loop from above that prints out your friends' names into the chunk below. 
+
+Make a new variable that has the name of your best friend (who should be in your list of friends). 
+
+Inside of your for loop, write an if statement to check if this friend is your best friend. If they are, print out "[name here] is my best friend!".
+
+Next add an else statement that prints out "[name here] is just a friend." if they're not your best friend.
+```{r}
+
+```
+
+We're going to write the wells in a 96 well plate. Using loops!
+
+Make a variable with A through H in it. Make another variable with 1 through 12 in it. Write a for loop that goes over the letters and prints them out.
+
+After that works, put another for loop inside of the first that loops over the numbers. Inside of this second loop print out the letter and number together (e.g. "A1", "A2", etc.).
+
+```{r}
+
+```
+
+
+## Advanced Activity
+
 - These activities will be a bit of synthesis of stuff from previous days
 - use `starwars <- starwars` to get pre-loaded practice data
-- Get rid of the "films", "vehicles" and "starships" columns using `select()` and save it as a new variable
+- Make a new data frame by getting rid of the "films", "vehicles" and "starships" columns using `select()`
 - Write a for loop to loop over the column names in your new variable
-    - Inside the loop, if the column contains numeric data, make a histogram of it
+    - Start by just printing out the column name in each iteration of the loop
+    - Next, write an if loop inside the for loop that checks if the current column contains numeric data and prints out "This column contains numeric data" if it does
+    - Once that works, add an else statement after your if loop that prints out "This column does not contain numeric data" if the column does not contain numeric data
+    - Next, if the column contains numeric data, make a histogram of it
     - Otherwise, use `table()` to get counts of categories
         - Look at the help documentation for `table()` to see how to use it
 - If you're super fast:
@@ -307,7 +384,7 @@ library(tidyverse) # load the tidyverse library
 starwars <- starwars # to get data
 
 
-### Write a for loop using over the “starwars” column names
+### Write a for loop using over the columns of the subset starwars data frame (after you get rid of the "films", "vehicles" and "starships" columns using select())
 Inside the loop, if the column contains numeric data, make a histogram of it
 Otherwise, use table() to get counts
 
@@ -319,7 +396,7 @@ Otherwise, use table() to get counts
 ## If you're super fast:
 Help someone who is struggling (loops can be confusing)
 
-### Write a while loop to count the sum of all numbers whose squared value is less than 1,234,567
+### Write a while loop to sum of all numbers whose squared value is less than 1,234,567
 
 1^2 < 1,234,567   # add 1 to sum total
 2^2 < 1,234,567   # add 2 to sum total
