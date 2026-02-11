@@ -25,7 +25,7 @@ library(tidyverse)
 ### Common error messages
 ```{r, eval=FALSE}
 mean(bob)
-#Error in mean(bob) : object 'bob' not found
+# Error in mean(bob) : object 'bob' not found
 ```
 R is looking for a variable named bob, but it doesn't exist
 -   Do you need to make it?
@@ -34,7 +34,7 @@ R is looking for a variable named bob, but it doesn't exist
 
 ```{r, eval=FALSE}
 arbleGarble(mtcars)
-#Error in arbleGarble(mtcars) : could not find function "arbleGarble"
+# Error in arbleGarble(mtcars) : could not find function "arbleGarble"
 ```
 R is trying to use the function `arbleGarble()`, but it doesn't exist
 -   Either load in the library that has it

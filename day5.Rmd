@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = TRUE)
 Load libraries
 ```{r}
 library(tidyverse)
-
 ```
 
 # Day 5
@@ -76,8 +75,8 @@ ggplot(
 
 # Set the overall look of the plot - I like the white background better than gray
 # This will apply to all plots you make after you run this code, so you only need to run it once per session
-theme_set(theme_bw())                                     # Changes default colors
-theme_update(plot.title = element_text(hjust = 0.5))      # Force title to be in the center
+theme_set(theme_bw()) # Changes default colors
+theme_update(plot.title = element_text(hjust = 0.5)) # Force title to be in the center
 
 ggplot(
     mtcars,
@@ -124,20 +123,20 @@ mtcars %>%
             x = as.factor(cyl),
             y = hp
         )
-) +
+    ) +
     geom_boxplot(
-        color = "red",        # These specifications aren't in aes()
-        fill = "blue",        # They apply to everything and we give specific values
+        color = "red", # These specifications aren't in aes()
+        fill = "blue", # They apply to everything and we give specific values
         size = 4
     )
 
 ggplot(
     mtcars,
     aes(
-        x = hp,                     # These specifications are in aes()
-        y = carb,                   # They apply to parts of the plot
-        color = as.factor(vs),      # They show up in the legend
-        shape = as.factor(gear),    # We give column names that have the groups we'll use
+        x = hp, # These specifications are in aes()
+        y = carb, # They apply to parts of the plot
+        color = as.factor(vs), # They show up in the legend
+        shape = as.factor(gear), # We give column names that have the groups we'll use
         size = disp
     )
 ) +
@@ -177,8 +176,8 @@ ggplot(
 Add a barplot layer to the plot
 ```{r}
 mtcars %>%
-    rownames_to_column("car_make") %>%                  # This makes the row names a column so we can use it in the plot
-    mutate(car_make = str_remove(car_make, " .+")) %>%  # This removes everything after the first space in the car_make column
+    rownames_to_column("car_make") %>% # This makes the row names a column so we can use it in the plot
+    mutate(car_make = str_remove(car_make, " .+")) %>% # This removes everything after the first space in the car_make column
     ggplot(
         aes(
             x = car_make,
@@ -264,7 +263,7 @@ ggplot(
         )
     ) +
     geom_jitter(
-        data = mtcars,                     # Note that we can provide an individual geom it's own data
+        data = mtcars, # Note that we can provide an individual geom it's own data
         aes(
             x = as.factor(cyl),
             y = hp
@@ -385,7 +384,7 @@ ggplot(
     aes(x = pressure)
 ) +
     geom_histogram(bins = 100) +
-    facet_wrap(~ category, scales = "free_y")
+    facet_wrap(~category, scales = "free_y")
 
 ggplot(
     dplyr::storms,
@@ -393,7 +392,7 @@ ggplot(
 ) +
     geom_histogram(bins = 100) +
     facet_wrap(
-        ~ category,
+        ~category,
         nrow = 1,
         scales = "free_y"
     )
@@ -413,8 +412,8 @@ ggplot(
         fill = category
     )
 ) +
-    geom_density(alpha = 0.5) +             # alpha sets transparency - 0 is clear, 1 is opaque
-    scale_color_brewer(palette = "Set2") +  # The brewer color palettes are pretty, and "Set2" is color-blind friendly
+    geom_density(alpha = 0.5) + # alpha sets transparency - 0 is clear, 1 is opaque
+    scale_color_brewer(palette = "Set2") + # The brewer color palettes are pretty, and "Set2" is color-blind friendly
     theme(
         legend.position = c(0.2, 0.9),
         legend.direction = "horizontal",
@@ -445,7 +444,7 @@ plot_in_variable <-
         aes(x = pressure)
     ) +
     geom_histogram(bins = 100) +
-    facet_wrap(~ category)
+    facet_wrap(~category)
 
 # ggsave will get the plot size from how big your "plot" windows is in the right pane if you don't specify it!!!!!
 ggsave(

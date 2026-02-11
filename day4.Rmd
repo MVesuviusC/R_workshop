@@ -180,7 +180,6 @@ rand_num
 
 tries <- 1
 while (rand_num < 0.999) {
-
     rand_num <- rnorm(1, sd = 0.5)
     tries <- tries + 1
     print(

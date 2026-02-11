@@ -31,7 +31,7 @@ read_tsv("materials/Fig1A_partial.txt") %>%
         )
     ) +
     geom_boxplot(fill = "darkgreen") +
-    facet_wrap(~ cancer_type) +
+    facet_wrap(~cancer_type) +
     theme_bw()
 
 # If you want to get rid of the empty "20wk" for Gastric
@@ -49,7 +49,7 @@ read_tsv("materials/Fig1A_partial.txt") %>%
         )
     ) +
     geom_boxplot(fill = "darkgreen") +
-    facet_wrap(~ cancer_type, scales = "free_x") + # scales = "free_x" allows the x axis to be different for each facet
+    facet_wrap(~cancer_type, scales = "free_x") + # scales = "free_x" allows the x axis to be different for each facet
     theme_bw()
 ```
 
@@ -73,7 +73,7 @@ read_tsv("materials/Fig2F.txt") %>%
     rename(
         pearson = `Pearson coefficient`,
         pval = `Bonferroni pvalue`,
-        gene = `Gene Symbols`              # You could also just edit the file
+        gene = `Gene Symbols` # You could also just edit the file
     ) %>%
     ggplot(
         aes(
@@ -84,8 +84,10 @@ read_tsv("materials/Fig2F.txt") %>%
     geom_point(size = 5, shape = 1) +
     ggrepel::geom_text_repel(aes(label = gene)) +
     theme_bw() +
-    labs(x = "Pearson Correlation Coefficient",
-         y = "-log10(Bonferroni p-value)")
+    labs(
+        x = "Pearson Correlation Coefficient",
+        y = "-log10(Bonferroni p-value)"
+    )
 ```
 
 #### Figure 3F - geom_col
@@ -109,11 +111,12 @@ read_tsv("materials/Fig3F.txt") %>%
             ymax = Avg + SEM
         ),
         position = position_dodge(width = 0.9),
-        color = "white",
+        color = "orange",
+        linewidth = 1,
         width = 0.5
     ) +
     scale_fill_manual(values = c("black", "blue")) +
-    facet_wrap(~ cell_line) +
+    facet_wrap(~cell_line) +
     coord_cartesian(
         ylim = c(50, 110) # this trims the y-axis to only show 50-110
     )

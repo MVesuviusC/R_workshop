@@ -35,7 +35,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - The tidyverse package is actually a bundle of other packages and has a ton of very useful functions.
 - I almost consider this package to be a requirement for using R.
 ```{r}
-#install.packages("tidyverse", Ncpus = 4)
+# install.packages("tidyverse", Ncpus = 4)
 library(tidyverse)
 
 install.packages("praise")

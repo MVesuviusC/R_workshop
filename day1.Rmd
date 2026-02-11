@@ -129,7 +129,7 @@ mtcars <- mtcars
 
 mtcars
 
-mtcars = mtcars
+mtcars <- mtcars
 summary(mtcars)
 ```
 
