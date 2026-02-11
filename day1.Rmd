@@ -40,6 +40,15 @@ You're going to see a lot of errors as you get started. That's totally normal, s
 ## Cheat sheets
 Find these in the "cheatsheets" folder.
 
+## Use of AI
+
+- AI is useful, but is sometimes gives wrong answers. This is worst when it gives you code that looks right but is subtly wrong. Be careful and skeptical!
+- You can use AI to help you learn R, but I would encourage you to try to solve problems on your own first. This will help you learn the concepts and the syntax better. If you get stuck, then you can use AI to help you out. But try to use it as a tool to help you learn, not as a crutch to do the work for you.
+- I would say for now completely avoid tools that write code for you in the terminal like GitHub Copilot. You will learn more quickly if you write the code yourself and then use AI to help you debug it or optimize it. If you use a tool that writes code for you, you won't learn how to write code yourself and you'll be lost when you need to write code that the tool can't handle.
+- When you do use AI, make sure to read the code it gives you and understand it. Don't just copy and paste it without understanding it. This will help you learn how to write code yourself and also help you learn how to debug code when it doesn't work. You can actually learn a lot by getting AI suggestions, so long as you take the time to read and understand the code it gives you.
+- Be careful and skeptical!
+- Seriously, it can really trip you up.
+
 ## RStudio overview
 ### Projects
 
