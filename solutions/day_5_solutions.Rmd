@@ -1,5 +1,202 @@
 ## Activity
 
+For the activities, lets use the txhousing dataset. You can load it like this:
+```{r}
+txhousing <- dplyr::txhousing
+```
+
+### Make a scatterplot using geom_point()
+
+Lets make a scatterplot of median home price over the years. The x-axis will be the year and the y-axis will be the median home price.
+
+```{r}
+ggplot(
+  txhousing,
+  aes(
+    x = year,
+    y = median
+  )
+) +
+  geom_point()
+```
+
+### Lets make a boxplot of the median housing prices by city
+
+Make the y-axis the city and the x-axis the median housing price so that the boxplots are horizontal rather than vertical.
+```{r}
+ggplot(
+  txhousing,
+  aes(
+    x = median,
+    y = city
+  )
+) +
+  geom_boxplot()
+```
+
+### Now lets plot the median housing prices from 2015 over the months
+
+I'll make a new dataset for you to use below that only contains the 2015 data.
+```{r}
+txhousing_2015 <-
+  txhousing %>%
+  dplyr::filter(year == 2015)
+
+txhousing_2015
+```
+
+Lets use this to help people see the difference between adding arguments inside vs outside of `aes()`
+
+1) Make the plot with no color specified for the points
+
+2) Make another plot where you put the color argument inside `aes()` so that the points are colored by city
+
+3) Now make a third plot where you keep `color = city`, but put it inside of geom_point() and not inside `aes()`. What happens? R is looking for a variable called `city` in the environment outside of the data - it can't find it so it throws an error.
+
+4) Now replace `city` with `"city"`. R is trying to make the points the color "city" - that is, it is treating "city" as a color value rather than a variable in the data, which isn't a valid color so it errors out.
+
+5) Now try putting `color = "blue"` inside of the aes(). Are your points blue? This is because inside of the `aes()`, color specifies what category to use. R is treating "blue" as a category for your data and so it colors them by the first default color, which is red.
+
+6) Now try putting `color = "blue"` outside of the aes(). Are your points blue now?
+
+```{r}
+# 1) Plot with no color specified
+txhousing_2015 %>%
+  ggplot(
+    aes(
+      x = month,
+      y = median
+    )
+  ) +
+  geom_point()
+
+# 2) Plot with color mapped to the city inside aes()
+txhousing_2015 %>%
+  ggplot(
+    aes(
+      x = month,
+      y = median,
+      color = city
+    )
+  ) +
+  geom_point()
+
+
+# 3) Plot with color = city put inside geom_point() rather than aes()
+# This will error out because it is looking for a variable named `city`
+# in the environment.
+txhousing_2015 %>%
+  ggplot(
+    aes(
+      x = month,
+      y = median
+    )
+  ) +
+  geom_point(color = city)
+
+# 4) Plot with color = "city" outside of aes()
+# This will error out because "city" is not a color and if you are outside of
+#  aes() geom_point() expects a color value (like "blue")
+txhousing_2015 %>%
+  ggplot(
+    aes(
+      x = month,
+      y = median
+    )
+  ) +
+  geom_point(color = "city")
+
+# 5) Plot with color = "blue" inside aes()
+# This will not make the points blue - R will treat "blue" as a category
+# in the data rather than a color value
+txhousing_2015 %>%
+  ggplot(
+    aes(
+      x = month,
+      y = median,
+      color = "blue"
+    )
+  ) +
+  geom_point()
+
+# 6) Plot with color = "blue" outside of aes()
+# This will make the points blue because the color argument outside
+# of aes() is interpreted as a color value rather than a variable
+txhousing_2015 %>%
+  ggplot(
+    aes(
+      x = month,
+      y = median
+    )
+  ) +
+  geom_point(color = "blue")
+```
+
+
+### Now lets make a summary of total listings each year across all cities and plot that over the years
+
+You will need to group the data by year and summarize the total number of listings for each year.
+
+The final plot will show the total number of listings on the y-axis and the year on the x-axis.
+```{r}
+txhousing_listings_by_year <-
+  txhousing %>%
+  dplyr::group_by(year) %>%
+  dplyr::summarise(
+    total_listings = sum(listings, na.rm = TRUE)
+  )
+```
+
+```{r}
+ggplot(
+  txhousing_listings_by_year,
+  aes(
+    x = year,
+    y = total_listings
+  )
+) +
+  geom_line() +
+  geom_point()
+```
+
+### Now lets make the plot look nicer
+
+Copy the code from the previous plot. Do each of the following changes below (one at a time) to slowly build up the plot. Generally when making a plot I don't write all of the code at once, I start with a basic plot and then add code incrementally.
+
+- Add in a title
+- Add labels for the x- and y-axes
+- Use `+ theme_bw()` to give the plot a clean black and white theme
+- Make the line thicker with the `linewidth` argument
+- Make the points larger and red with the `size` and `color` arguments.
+- Add geom_smooth() to add a smoothed trend line to the plot behind all the other geoms.
+- Force the title to be centered using `theme()` with the `plot.title = element_text(hjust = 0.5))` argument.
+
+```{r}
+ggplot(
+  txhousing_listings_by_year,
+  aes(
+    x = year,
+    y = total_listings
+  )
+) +
+  geom_smooth() +
+  geom_line(linewidth = 1.5) +
+  geom_point(size = 3, color = "red") +
+  labs(
+    title = "Total Housing Listings in Texas by Year",
+    x = "Year",
+    y = "Total Listings"
+  ) +
+  theme_bw() +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 25)
+  )
+```
+
+If you want to get advanced, try adding more arguments to `theme()` to do things like change the font size of the x/y labels, tick marks, legend text, etc.
+
+## Advanced Activities
+
 ## Recreate plots from a paper
 
 - Data is from https://doi.org/10.1371/journal.pbio.2005756

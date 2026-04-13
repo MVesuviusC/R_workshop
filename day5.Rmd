@@ -35,7 +35,7 @@ library(tidyverse)
 ### Anatomy of a ggplot
 
 ggplot(                         # This makes your "canvas"
-    data_frame_here,            # The data you're using - must be a long form data.frame or tibble
+    data_frame_here,            # The data you're using - must be a long form data.frame or tibble - see day 3 code for discussion
     aes(                        # "Aesthetics" - x, y, colors, etc  - Applies to all layers unless overwritten
         x = x here,             # The name of the column that has your x values - note: don't put this in quotes
         y = y here,             # The name of the column that has your y values
@@ -57,12 +57,12 @@ You can really customize the plot and the code can get quite long. Thinking abou
 
 I'm not going over all the things in this document, just the ones marked with lots of pound signs ##############################################################
 
-I put the rest in here for reference. If you go through it I've tried to drop in a bunch of random bits of code that might be useful to you in the future.
+I put the rest in here for reference. If you go through it, I've tried to drop in a bunch of random bits of code that might be useful to you in the future.
 
 ## Functions for today's activity, also for reference
 
 #### geom_point() ##############################################################
-Add a scatterplot layer to the plot
+Add a scatterplot layer to the plot. This requires the x and y aesthetics to be mapped so that ggplot knows what to plot on the x and y axes.
 ```{r}
 ggplot(
   mtcars,
@@ -92,28 +92,26 @@ ggplot(
 #### aes() ################################################
 Change colors/shapes/etc
 
-- fill     = color of the **inside** of a shape
-- color    = color of the **border** of a shape, note that points use color for the color of the point
-- shape    = the shape of the point
-- size     = the size of the point or line
-- alpha    = transparency of the point or line
-- linetype = the type of line
-- group    = the group that the data is in, used for things like boxplots
-- label    = Text to plot somewhere, used in geom_text(), geom_label(), etc
+- fill      = color of the **inside** of a shape
+- color     = color of the **border** of a shape, note that points use color for the color of the point
+- shape     = the shape of the point
+- size      = the size of the point or line
+- alpha     = transparency of the point or line
+- linetype  = the type of line
+- linewidth = the width of the line, used in geoms that draw lines like geom_line() or geom_errorbar()
+- group     = the group that the data is in, used for things like boxplots
+- label     = Text to plot somewhere, used in geom_text(), geom_label(), etc
 
-If you put the argument outside of aes()
+If you put the argument outside of aes() inside of a geom_{something}()
 
 -   applies to everything in that layer
 -   does not show up in the legend
 
-If you put it inside aes()
+If you put it inside aes() in either ggplot(aes({thing here})) or geom_{something}(aes({thing here}))
 
--   Applies to parts of the layer
+-   Applies to parts of the layer/plot
 -   Shows up in legend
-
-If it is in the aes() call inside of ggplot() `ggplot(aes(...))`
-
--   It applies to all layers
+-   If it is in ggplot(), it applies to all layers
 -   Unless another layer overwrites it
 
 ```{r}
@@ -127,7 +125,7 @@ mtcars %>%
   geom_boxplot(
     color = "red", # These specifications aren't in aes()
     fill = "blue", # They apply to everything and we give specific values
-    size = 4
+    linewidth = 4
   )
 
 ggplot(
@@ -146,6 +144,7 @@ ggplot(
 #### geom_histogram()
 - Better looking than hist()
 - Specify how many bars to show with `bins`
+- You put only x in the aes()
 ```{r}
 hist(storms$pressure, n = 200)
 
@@ -174,6 +173,8 @@ ggplot(
 
 #### geom_col() ################################################################
 Add a barplot layer to the plot
+- geom_col() takes both x and y aesthetics - x is the category / factor on the x axis, y is the height of the bar
+- Unlike geom_bar() which counts the number of observations in each x category, geom_col() uses the y value you supply to set the height of the bar
 ```{r}
 mtcars %>%
   rownames_to_column("car_make") %>% # This makes the row names a column so we can use it in the plot
@@ -197,6 +198,8 @@ mtcars %>%
 
 #### geom_errorbar()###########################################################
 Add error bars as a layer to plot
+- Need to have a column of values to specify how high/low the error bars should go, such as a standard deviation or standard error
+- You specify the ymin / ymax aesthetics inside aes() in geom_errorbar() to tell ggplot how far the error bars should extend
 ```{r}
 summarized_hp <-
   mtcars %>%
@@ -274,6 +277,9 @@ ggplot(
 
 #### ggbeeswarm package
 Adds noise in x direction and pulls things to the center to make it look nicer than jitter
+
+- Need to install the ggbeeswarm package first with `install.packages("ggbeeswarm")`
+- Works similar to geom_point(), though it struggles with large datasets
 ```{r}
 ggplot(
   summarized_hp,
@@ -301,14 +307,25 @@ ggplot(
 
 #### geom_boxplot() ############################################################
 Boxplots!
+- Specify both x and y aesthetics - x is the factor / category on the x axis, y is the numeric variable that the boxplot will summarize
+- Can turn the plot sideways by making y a category and x the numeric variable
 ```{r}
 mtcars %>%
   ggplot(aes(x = as.factor(cyl), y = hp)) +
-  geom_boxplot() +
+  geom_boxplot()
+```
+
+#### geom_violin()
+- Similar to a boxplot, but shows the density of the distribution of the numeric variable along the y axis for each category on the x axis
+- This can over-smooth the data if you have non-standard data distributions
+- The `adjust` argument controls the bandwidth / smoothing of the density estimate - higher values smooth more, lower values less
+```{r}
+mtcars %>%
+  ggplot(aes(x = as.factor(cyl), y = hp)) +
   geom_violin(adjust = 1, fill = "red", alpha = 0.5)
 ```
 
-#### geom_smooth
+#### geom_smooth()
 Add a regression line to your plot
 Can specify the type of regression with `method`
 Can remove gray confidence interval with `se = FALSE`
@@ -321,7 +338,7 @@ ggplot(
   )
 ) +
   geom_point() +
-  geom_smooth()
+  geom_smooth(method = "lm")
 ```
 
 #### Use multiple datasets in the same plot
@@ -369,6 +386,11 @@ ggplot(mtcars) +
 ```
 
 #### facet_wrap() ##############################################################
+Faceting lets you split a plot into multiple panels based on the values of one or more categorical variables. `facet_wrap()` will wrap the panels into a grid, and you can specify the faceting formula with `~ var1`.
+
+- You can facet on more than one variable by using `+` in the formula - e.g. `~ var1 + var2` will make panels for each combination of the levels of var1 and var2
+- You can control the scales of the facets independently with the `scales` argument - e.g. `scales = "free_y"` lets the y axis vary across the facets rather than being fixed across all panels
+- You can also control the number of rows / columns in the wrapped facets with `nrow` / `ncol` - e.g. `facet_wrap(~ var1, nrow = 1)` will put all the facets in a single row rather than letting ggplot pick the layout automatically
 ```{r}
 dplyr::storms
 
@@ -404,6 +426,8 @@ https://henrywang.nl/ggplot2-theme-elements-demonstration/
 
 You can change just about any aspect of how the plot looks with theme()
 You'll have to look up how to change each specific bit
+
+Generally, you call theme() and then specify the elements you want to tweak inside it - e.g. `theme(legend.position = "bottom")` etc. See the help documentation for theme() for all the elements you can modify - `?theme`.
 ```{r}
 ggplot(
   storms,
@@ -430,7 +454,13 @@ ggplot(
   )
 ```
 
-### ggsave()
+### ggsave() ###################################################################
+Saves an image to your computer
+
+- Specify the filename, with path to the folder if needed
+- Optionally specify the width / height of the output image (in inches by default) with the `width` / `height` arguments
+- You can also pass a variable with a plot output to the `plot` argument rather than relying on the last plot that was printed to the plotting pane
+- If you don't specify the width / height, ggsave will use the size of the current plotting device / plot window to determine the output image dimensions, which can be problematic
 ```{r}
 ggsave(
   "examplePlot.png",
@@ -454,7 +484,11 @@ ggsave(
 ```
 
 ### heatmap() ##################################################################
-If you like heatmaps also check out the pheatmap package
+- This function takes in a numeric matrix (or something that can be coerced to a matrix) and produces a heatmap of the values in that matrix. 
+- The column and row names of the matrix are used to label the axes of the heatmap.
+- Can specify if you want to cluster by rows and/or columns
+
+If you like heatmaps also check out the pheatmap package. You may need to install it first with `install.packages("pheatmap")`.
 ```{r}
 heatmap(as.matrix(mtcars))
 
@@ -464,6 +498,11 @@ pheatmap::pheatmap(as.matrix(mtcars))
 ```
 
 ### PCA
+- Principal Component Analysis (PCA) is a technique to reduce the dimensionality of a dataset by transforming the original variables into a new set of uncorrelated variables (the principal components) that capture the most variance in the data.
+- Breaks the data down into new principal components that are linear combinations of the original variables, ordered by the amount of variance in the data that each component explains.
+- The first principal component (PC1) explains the most variance in the data, the second principal component (PC2) explains the second most, and so on - so you can plot the first few PCs to see the main directions of variation in the dataset.
+
+If you run the example code below you will need to install the ggrepel package with `install.packages("ggrepel")` first. This is a package that makes it easier to add text labels to points in a ggplot without the labels overlapping each other.
 ```{r}
 mtcars <- mtcars
 
@@ -492,7 +531,108 @@ ggplot(
 
 ## Activity
 
-## Recreate plots from a paper
+For the activities, lets use the txhousing dataset. You can load it like this:
+```{r}
+txhousing <- dplyr::txhousing
+```
+
+This has information on housing in Texas - things like sales, median price, and volume of transactions across different cities and months. It includes data from 2000 through 2015.
+
+> Column Name   Data Type   Description
+> city          <chr>       Name of the Multiple Listing Service (MLS) area or city in Texas.
+> year          <int>       The year the data was recorded (2000-2015).
+> month         <int>       The month the data was recorded (1-12).
+> date          <dbl>       A continuous numeric representation of the date (e.g., 2000.000 for Jan 2000). Useful for plotting time series smoothly.
+> sales         <dbl>       The total number of home sales that occurred during that month.
+> volume        <dbl>       The total value of all home sales (in US Dollars) for that month.
+> median        <dbl>       The median sale price (in US Dollars) of homes sold that month.
+> listings      <dbl>       The total number of active home listings available.
+> inventory     <dbl>       "Months inventory" - the estimated amount of time (in months) it would take to sell all current listings at the current pace of sales.
+
+### Make a scatterplot using geom_point()
+
+Lets make a scatterplot of median home price over the years. The x-axis will be the year and the y-axis will be the median home price.
+
+```{r}
+
+```
+
+### Lets make a boxplot of the median housing prices by city
+
+Make the y-axis the city and the x-axis the median housing price so that the boxplots are horizontal rather than vertical.
+```{r}
+
+```
+
+### Now lets plot the median housing prices from 2015 over the months
+
+I'll make a new dataset for you to use below that only contains the 2015 data.
+```{r}
+txhousing_2015 <-
+  txhousing %>%
+  dplyr::filter(year == 2015)
+
+txhousing_2015
+```
+
+Lets use this to help people see the difference between adding arguments inside vs outside of `aes()`
+
+1) Make the plot with no color specified for the points
+
+2) Make another plot where you put the color argument inside `aes()` so that the points are colored by city
+
+3) Now make a third plot where you keep `color = city`, but put it inside of geom_point() and not inside `aes()`. What happens? R is looking for a variable called `city` in the environment outside of the data - it can't find it so it throws an error.
+
+4) Now replace `city` with `"city"`. R is trying to make the points the color "city" - that is, it is treating "city" as a color value rather than a variable in the data, which isn't a valid color so it errors out.
+
+5) Now try putting `color = "blue"` inside of the aes(). Are your points blue? This is because inside of the `aes()`, color specifies what category to use. R is treating "blue" as a category for your data and so it colors them by the first default color, which is red.
+
+6) Now try putting `color = "blue"` outside of the aes(). Are your points blue now?
+
+```{r}
+
+```
+
+
+### Now lets make a summary of total listings each year across all cities and plot that over the years
+
+You will need to group the data by year and summarize the total number of listings for each year.
+
+The final plot will show the total number of listings on the y-axis and the year on the x-axis.
+```{r}
+txhousing_listings_by_year <-
+  txhousing %>%
+  dplyr::group_by(year) %>%
+  dplyr::summarise(
+    total_listings = sum(listings, na.rm = TRUE)
+  )
+```
+
+```{r}
+
+```
+
+### Now lets make the plot look nicer
+
+Copy the code from the previous plot. Do each of the following changes below (one at a time) to slowly build up the plot. Generally when making a plot I don't write all of the code at once, I start with a basic plot and then add code incrementally.
+
+- Add in a title
+- Add labels for the x- and y-axes
+- Use `+ theme_bw()` to give the plot a clean black and white theme
+- Make the line thicker with the `linewidth` argument
+- Make the points larger and red with the `size` and `color` arguments.
+- Add geom_smooth() to add a smoothed trend line to the plot behind all the other geoms.
+- Force the title to be centered using `theme()` with the `plot.title = element_text(hjust = 0.5))` argument.
+
+```{r}
+
+```
+
+If you want to get advanced, try adding more arguments to `theme()` to do things like change the font size of the x/y labels, tick marks, legend text, etc.
+
+## Advanced Activities
+
+### Recreate plots from a paper
 
 - Data is from https://doi.org/10.1371/journal.pbio.2005756
     - Najafov A, Zervantonakis IK, Mookhtiar AK, Greninger P, March RJ, Egan RK, et al. (2018) BRAF and AXL oncogenes drive RIPK3 expression loss in cancer. PLoS Biol 16(8): e2005756. https://doi.org/10.1371/journal.pbio.2005756
@@ -540,14 +680,18 @@ https://doi.org/10.1371/journal.pbio.2005756.s001
 
 Suggestions for what to do next:
 - Try to practice working in R as much as you can
-- Find ways that R can be useful for you and explore packages that are useful for the type of work you do
+- **Find ways** that R can be useful for you and explore packages that are useful for the type of work you do
 - You're still learning! Don't get down on yourself when you struggle, because you will
     - The better you get at R, the less you'll struggle, but everyone runs into problems
 - Read the documentation for functions/packages you think you'll use a lot
 - Make all the errors!
     - Then google them and try to understand what went wrong
+    - Ask AI for help, but make sure to ask it to explain the answer rather than just give the code
 - Go back through and re-read the materials to reinforce what you've learned and pick up little details you may have missed
+- Check out other R resources/tutorials to continue learning beyond this workshop
+  - youtube has lots of good tutorials on R
 - If you're going to the SCRGOT single cell workshop, do some reading on Seurat
     - https://satijalab.org/seurat/
-- The teams channel from the workshop shouldn't get deleted right away, so if you have problems, post there to see if people can help
-    - Also, if other people post, read what problems they ran into and try to learn from it
+- I run a weekly bioinformatics meeting where we talk about bioinformatics topics and help troubleshoot problems
+  - See https://docs.google.com/spreadsheets/d/1yCwYNAL9MhYErl98CikoiTW6yx5gg54w66eD73WsRVc/edit?usp=sharing for example previous topics and video recordings of lectures
+  - Email/teams me if you want to join (OSU welcome too)
