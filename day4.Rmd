@@ -1,7 +1,7 @@
 ---
-title: "Intro to R 2025 day 4"
+title: "Intro to R 2026 day 4"
 author: "Matt Cannon"
-date: '2025-04-03'
+date: '2026-04-23'
 output:
   html_document:
     code_folding: hide
